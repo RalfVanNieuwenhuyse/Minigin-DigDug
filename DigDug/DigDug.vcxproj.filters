@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{ed13ef6e-593e-46b6-8b3d-62b549e12516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{16522a7e-164c-4023-b5d3-587212b7e7c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Player">
+      <UniqueIdentifier>{7885872b-d68b-4b52-ac56-9aa517ff3a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\UI">
+      <UniqueIdentifier>{cc88a507-5fbc-4477-9399-e56cc9778227}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="LivesComponent.cpp">
+      <Filter>Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScore.cpp">
+      <Filter>Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="LivesUI.cpp">
+      <Filter>Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreUI.cpp">
+      <Filter>Components\UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="LivesComponent.h">
+      <Filter>Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScore.h">
+      <Filter>Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="LivesUI.h">
+      <Filter>Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreUI.h">
+      <Filter>Components\UI</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

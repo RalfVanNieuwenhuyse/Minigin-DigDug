@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{533d890c-4faa-4bed-98ec-63fc8f787571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{ed8ab1b6-2675-425e-b2e2-a7d797f8acf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{9bce107a-7f2c-4116-99b6-1d79ac5ff3b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Render">
+      <UniqueIdentifier>{620f9f2f-f8a4-4c00-b5aa-d913fcbaaf12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{2974c2aa-de9d-4e94-9e84-bc92538d0cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{1f817b0c-dba1-4900-96ef-200d5292b025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Commands">
+      <UniqueIdentifier>{b8f7ff14-3078-4ae8-96af-6b0039730de6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{efdaac9d-b10a-45e4-8594-c31d6ed9d65c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Commands\Debug">
+      <UniqueIdentifier>{fec8c45e-42a2-4eb1-a143-7d3b694d48c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{e69bead9-fd26-4a0e-a2f4-2694faccc46e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Minigin.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GTime.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FPS.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Rotatetor.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageRender.h">
+      <Filter>Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRender.h">
+      <Filter>Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\backends\imgui_impl_opengl3.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\backends\imgui_impl_sdl2.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="TrashTheCache.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui-1.90.4\imgui_plot.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxController.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Input\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SDL_SoundSytem.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="logging_sound_system.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Minigin.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GTime.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="FPS.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Rotatetor.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Components\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageRender.cpp">
+      <Filter>Components\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Components\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRender.cpp">
+      <Filter>Components\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\backends\imgui_impl_opengl3.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\backends\imgui_impl_sdl2.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="TrashTheCache.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui_plot.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxController.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Input\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="SDL_SoundSytem.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="logging_sound_system.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
