@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugCommands.cpp" />
+    <ClCompile Include="GridComponent.cpp" />
+    <ClCompile Include="GridMovement.cpp" />
     <ClCompile Include="LivesComponent.cpp" />
     <ClCompile Include="LivesUI.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -30,6 +32,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugCommands.h" />
+    <ClInclude Include="GridComponent.h" />
+    <ClInclude Include="GridMovement.h" />
     <ClInclude Include="LivesComponent.h" />
     <ClInclude Include="LivesUI.h" />
     <ClInclude Include="MoveCommand.h" />

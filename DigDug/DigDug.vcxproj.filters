@@ -25,6 +25,9 @@
     <Filter Include="Components\UI">
       <UniqueIdentifier>{cc88a507-5fbc-4477-9399-e56cc9778227}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\World">
+      <UniqueIdentifier>{fc90f108-1b71-46cc-934b-430ad01d48bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -51,6 +54,12 @@
     <ClCompile Include="ScoreUI.cpp">
       <Filter>Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="GridComponent.cpp">
+      <Filter>Components\World</Filter>
+    </ClCompile>
+    <ClCompile Include="GridMovement.cpp">
+      <Filter>Components\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="State.h">
@@ -73,6 +82,12 @@
     </ClInclude>
     <ClInclude Include="ScoreUI.h">
       <Filter>Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GridComponent.h">
+      <Filter>Components\World</Filter>
+    </ClInclude>
+    <ClInclude Include="GridMovement.h">
+      <Filter>Components\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,18 +2,17 @@
 #include "Transform.h"
 #include "GTime.h"
 
-
 rvn::MoveCommand::MoveCommand(dae::GameObject* gameObject)
 	:GameObjectCommand(gameObject)
 {
 	m_Transform = GetGameObject()->GetTransform();
-
+	m_GridMovement = GetGameObject()->GetComponent<rvn::GridMovement>();
 }
 
 void rvn::MoveCommand::Execute()
 {	
-	/*auto newPos = m_Transform->GetLocalPosition() + m_Direction * m_MoveSpeed * dae::GTime::GetInstance().GetDeltaTime();
-	m_Transform->SetPosition(newPos);*/
+	m_GridMovement->ChangeDirection(m_Direction);
+	m_GridMovement->Move();
 }
 
 void rvn::MoveCommand::SetDirection(glm::vec3 direction)

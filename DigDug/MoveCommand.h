@@ -1,13 +1,14 @@
 #pragma once
 #include "Command.h"
 #include <glm/glm.hpp>
+#include "GridMovement.h"
 
 
 class dae::Transform;
 
 namespace rvn
 {
-	class PacmanMover;
+	//class GridMovement;
 
 	class MoveCommand final : public dae::GameObjectCommand
 	{
@@ -20,7 +21,7 @@ namespace rvn
 
 	private:
 		std::shared_ptr<dae::Transform> m_Transform{ nullptr };
-		std::shared_ptr<PacmanMover> m_PacmanMovment{ nullptr };
+		std::shared_ptr<GridMovement> m_GridMovement{ nullptr };
 
 		glm::vec3 m_Direction{};
 		float m_MoveSpeed{};
