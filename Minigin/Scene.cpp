@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+#include <execution>
+
 using namespace dae;
 
 unsigned int Scene::m_idCounter = 0;
@@ -52,7 +54,7 @@ void dae::Scene::ReorderGameobjects()
 {
 	if (!m_WasGameObjectAdded) return;
 
-	std::sort(m_objects.begin(), m_objects.end(),
+	std::sort(std::execution::par_unseq, m_objects.begin(), m_objects.end(),
 		[](const std::shared_ptr<GameObject>& pObject1, const std::shared_ptr<GameObject>& pObject2)
 		{
 			auto object1z = pObject1->GetTransform().get()->GetPosition().z;

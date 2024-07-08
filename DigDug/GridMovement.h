@@ -34,6 +34,8 @@ namespace rvn
 
 		std::vector<glm::vec3> m_Grid{};
 		glm::vec3 GetClosestGridPoint(const glm::vec3& position);
+
+		bool IsWithinGridBounds(const glm::vec3& position);
 	};
 }
 
