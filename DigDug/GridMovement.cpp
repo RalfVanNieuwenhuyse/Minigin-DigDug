@@ -20,6 +20,7 @@ void rvn::GridMovement::Move()
 {
     if (glm::length2(m_Direction) > 0)
     {
+        float m_InterpolationFactor = 0.1f;
         auto currentPosition = GetOwner()->GetComponent<dae::Transform>()->GetPosition();
         auto closestPoint = GetClosestGridPoint(currentPosition);
 
@@ -29,14 +30,18 @@ void rvn::GridMovement::Move()
             // Move along the x-axis
             float directionSign = (m_Direction.x > 0) ? 1.0f : -1.0f;
             currentPosition.x += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();
-            currentPosition.y = closestPoint.y;
+
+            // Interpolate y position towards closest grid point
+            currentPosition.y += (closestPoint.y - currentPosition.y) * m_InterpolationFactor;
         }
         else
         {
             // Move along the y-axis
             float directionSign = (m_Direction.y > 0) ? 1.0f : -1.0f;
             currentPosition.y += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();
-            currentPosition.x = closestPoint.x;
+
+            // Interpolate x position towards closest grid point
+            currentPosition.x += (closestPoint.x - currentPosition.x) * m_InterpolationFactor;
         }
 
         // Update the position
