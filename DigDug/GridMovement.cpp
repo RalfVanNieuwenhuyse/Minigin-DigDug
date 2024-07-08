@@ -4,7 +4,9 @@
 #include <iostream>
 
 #include <algorithm> // for std::min_element
-#include <glm/gtx/norm.hpp> // for glm::distance2
+#pragma warning(disable : 4201)
+#include <glm/gtx/norm.hpp>
+#pragma warning(default : 4201)
 
 rvn::GridMovement::GridMovement(dae::GameObject* owner)
 	:Component(owner)
