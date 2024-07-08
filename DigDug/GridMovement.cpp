@@ -8,6 +8,7 @@
 #include <glm/gtx/norm.hpp>
 #pragma warning(default : 4201)
 
+
 rvn::GridMovement::GridMovement(dae::GameObject* owner)
 	:Component(owner)
 {
@@ -22,38 +23,64 @@ void rvn::GridMovement::Move()
 {
     if (glm::length2(m_Direction) > 0)
     {
-        float m_InterpolationFactor = 0.1f;
-        auto currentPosition = GetOwner()->GetComponent<dae::Transform>()->GetPosition();
+        auto currentPosition = GetOwner()->GetTransform()->GetPosition();
         auto closestPoint = GetClosestGridPoint(currentPosition);
 
-        // Determine whether to move along the x-axis or y-axis based on the direction
+        float snapTreshHold = 5.f;                
+       
         if (glm::abs(m_Direction.x) > glm::abs(m_Direction.y))
         {
-            // Move along the x-axis
-            float directionSign = (m_Direction.x > 0) ? 1.0f : -1.0f;
-            currentPosition.x += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();
+            if (glm::abs(closestPoint.y - currentPosition.y) < snapTreshHold)
+            {               
+                float directionSign = (m_Direction.x > 0) ? 1.0f : -1.0f;
+                currentPosition.x += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();
+                currentPosition.y += (closestPoint.y - currentPosition.y) * m_InterpolationFactor;
+                m_PreviousDirection = m_Direction;
+            }
+            else
+            {
+                m_Direction = m_PreviousDirection;
+                float directionSign = (m_PreviousDirection.y > 0) ? 1.0f : -1.0f;
+                currentPosition.y += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();                
+                currentPosition.x += (closestPoint.x - currentPosition.x) * m_InterpolationFactor;
+            }
 
-            // Interpolate y position towards closest grid point
-            currentPosition.y += (closestPoint.y - currentPosition.y) * m_InterpolationFactor;
         }
         else
         {
-            // Move along the y-axis
-            float directionSign = (m_Direction.y > 0) ? 1.0f : -1.0f;
-            currentPosition.y += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();
+            if (glm::abs(closestPoint.x - currentPosition.x) < snapTreshHold)
+            {
+                float directionSign = (m_Direction.y > 0) ? 1.0f : -1.0f;
+                currentPosition.y += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();
+                currentPosition.x += (closestPoint.x - currentPosition.x) * m_InterpolationFactor;
+                m_PreviousDirection = m_Direction;
 
-            // Interpolate x position towards closest grid point
-            currentPosition.x += (closestPoint.x - currentPosition.x) * m_InterpolationFactor;
+            } 
+            else
+            {
+                m_Direction = m_PreviousDirection;
+                float directionSign = (m_PreviousDirection.x > 0) ? 1.0f : -1.0f;
+                currentPosition.x += directionSign * m_Speed * dae::GTime::GetInstance().GetDeltaTime();                
+                currentPosition.y += (closestPoint.y - currentPosition.y) * m_InterpolationFactor;
+            }
         }
-
-        // Update the position
-        GetOwner()->GetComponent<dae::Transform>()->SetPosition(currentPosition);
+        
+        GetOwner()->GetTransform()->SetPosition(currentPosition);        
     }
 }
 
 void rvn::GridMovement::ChangeDirection(const glm::vec3& direction)
 {	
 	m_Direction = direction;
+}
+
+void rvn::GridMovement::SetGrid(std::vector<glm::vec3> grid)
+{
+    m_Grid = grid;
+    auto currentPosition = GetOwner()->GetTransform()->GetPosition();
+    auto closestPoint = GetClosestGridPoint(currentPosition);
+    GetOwner()->GetTransform()->SetPosition(closestPoint);
+
 }
 
 glm::vec3 rvn::GridMovement::GetClosestGridPoint(const glm::vec3& position)

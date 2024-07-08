@@ -17,18 +17,23 @@ namespace rvn
 		void Update() override;
 
 		void Move();
-		void SetSpeed(const float speed) { m_Speed = speed; };
+		void SetSpeed(const float& speed) { m_Speed = speed; };
+		void SetSnapTreshHold(const float& treshhold) { m_SnapTreshhold = treshhold; };
 		void ChangeDirection(const glm::vec3& direction);
 
-		void SetGrid(std::vector<glm::vec3> grid) { m_Grid = grid; };
+		void SetGrid(std::vector<glm::vec3> grid);
 
 
 	private:
 		float m_Speed{};
+		float m_SnapTreshhold{5.f};
+		float m_InterpolationFactor{0.1f};
 		glm::vec3 m_Direction{};	
+
+		glm::vec3 m_PreviousDirection{};
+
 		std::vector<glm::vec3> m_Grid{};
 		glm::vec3 GetClosestGridPoint(const glm::vec3& position);
-
 	};
 }
 
