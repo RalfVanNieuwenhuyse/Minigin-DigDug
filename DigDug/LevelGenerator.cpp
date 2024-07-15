@@ -16,6 +16,8 @@
 #include "Prefabs.h"
 
 
+#include <iostream>
+
 rvn::LevelGenerator::LevelGenerator(const std::string& filename)
     :m_Filename(filename)
 {
@@ -52,40 +54,59 @@ bool rvn::LevelGenerator::loadLevel()
     return true;
 }
 
-void rvn::LevelGenerator::generateLevel(dae::Scene& /*scene*/, const glm::vec3& /*offset*/)//thank the ai overlords chatgpt
+void rvn::LevelGenerator::generateLevel(dae::Scene& scene, const glm::vec3& offset)//thank the ai overlords chatgpt
 {
     if (!m_Document.IsObject() || !m_Document.HasMember("grid")) {
         std::cerr << "No level data loaded." << std::endl;
         return;
     }
 
-    //const rapidjson::Value& grid = m_Document["grid"];
+    auto gridcomp = std::make_shared<dae::GameObject>();
+    m_Grid = gridcomp->AddComponent<rvn::GridComponent>();
+    m_Grid->CreateGrid(m_Height, m_Width, m_Offset, glm::vec3{ 100,100,0 });
+    scene.Add(gridcomp);
 
-    
+    const rapidjson::Value& grid = m_Document["grid"];
 
-    
+    for (rapidjson::SizeType y = 0; y < grid.Size(); ++y) {
+        const rapidjson::Value& row = grid[y];
+        for (rapidjson::SizeType x = 0; x < row.Size(); ++x) {
+            int element = row[x].GetInt();
+            glm::vec3 position = offset + glm::vec3(x * m_Offset, y * m_Offset, 0.0f);
+            generateElement(element, scene, position, m_Grid->GetGrid(), y * row.Size() + x);
+        }
+    }
 }
 
-void rvn::LevelGenerator::generateElement(int element, dae::Scene& /*scene*/, const glm::vec3& /*pos*/)
+void rvn::LevelGenerator::generateElement(int element, dae::Scene& scene, const glm::vec3& pos, std::vector<glm::vec3> grid, int cellIndex)
 {
     switch (element) {
     case 1:
         //Createplayer;
+        glm::vec3 newPos = pos;
+        newPos.z += 1.f;
+        rvn::Prefab::createCharacters(scene, newPos, grid);
+        m_Grid->DigCell(cellIndex);
         break;
     case 2:
         //CreateEmpty;
+        m_Grid->DigCell(cellIndex);
         break;
     case 3:
         //CreateWalltype0
+        rvn::Prefab::createWall00(scene, pos);
         break;
     case 4:
         //CreateWalltype1
+        rvn::Prefab::createWall01(scene, pos);
         break;
     case 5:
         //CreateWalltype2
+        rvn::Prefab::createWall02(scene, pos);
         break;
     case 6:
         //CreateWalltype3
+        rvn::Prefab::createWall03(scene, pos);
         break;
 
     case 7:
@@ -93,7 +114,22 @@ void rvn::LevelGenerator::generateElement(int element, dae::Scene& /*scene*/, co
        
         break;
     default:
-
+        m_Grid->DigCell(cellIndex);
         break;
+    }
+}
+
+void rvn::LevelGenerator::DEBUG_CheckLevelDug()
+{
+    const int width = m_Width;
+    const int height = m_Height;
+    for (int y = 0; y < height; ++y) {
+
+        for (int x = 0; x < width; ++x) {
+
+            std::cout << m_Grid->IsCellDug(y * width + x) << " ";
+        }
+
+        std::cout << std::endl;
     }
 }

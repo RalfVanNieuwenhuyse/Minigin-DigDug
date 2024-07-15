@@ -95,7 +95,7 @@ namespace rvn
 
             auto empty = std::make_shared<dae::GameObject>();
             scene.Add(empty);
-            empty->GetTransform()->SetPosition(5, (480 / 2), 1);
+            empty->GetTransform()->SetPosition(5, (480.f / 2.f), 1);
 
             auto pacmanLives = std::make_shared<dae::GameObject>();
             scene.Add(pacmanLives);

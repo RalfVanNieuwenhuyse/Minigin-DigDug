@@ -16,9 +16,21 @@ namespace rvn
 
 		const std::vector<glm::vec3>& CreateGrid(int rows, int collums, float cellSize, glm::vec3 offset = glm::vec3{});
 		const std::vector<glm::vec3>& GetGrid() const { return m_Grid; };		
+		bool IsCellDug(int cellNumber) { return m_HasBeenDug[cellNumber]; };
+		void DigCell(int cellNumber);
+
+		int GetCellIndexAtPosition(glm::vec3 position) const;
+		bool IsCellDug(glm::vec3 position);
+		void DigCell(glm::vec3 position);
+
 	private:
 		std::vector<glm::vec3> m_Grid{};
+		std::vector<bool> m_HasBeenDug{};
 
+		int m_Rows{};
+		int m_Collums{};
+		float m_Cellsize{};
+		glm::vec3 m_Offset{};
 	};
 }
 
