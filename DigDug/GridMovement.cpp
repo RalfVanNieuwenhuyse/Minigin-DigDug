@@ -85,16 +85,15 @@ void rvn::GridMovement::SetGrid(std::vector<glm::vec3> grid)
     auto currentPosition = GetOwner()->GetTransform()->GetPosition();
     auto closestPoint = GetClosestGridPoint(currentPosition);
     GetOwner()->GetTransform()->SetPosition(glm::vec3{ closestPoint.x,closestPoint.y,currentPosition.z });
-
 }
 
 glm::vec3 rvn::GridMovement::GetClosestGridPoint(const glm::vec3& position)
 {
-		auto closestPoint = *std::min_element(m_Grid.begin(), m_Grid.end(),
-			[&](const glm::vec3& a, const glm::vec3& b)
-			{
-				return glm::distance2(position, a) < glm::distance2(position, b);
-			});
+    auto closestPoint = *std::min_element(m_Grid.begin(), m_Grid.end(),
+        [&](const glm::vec3& a, const glm::vec3& b)
+        {
+        	return glm::distance2(position, a) < glm::distance2(position, b);
+        });
 
 	return closestPoint;
 }

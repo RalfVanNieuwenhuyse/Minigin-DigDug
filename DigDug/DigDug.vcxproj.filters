@@ -60,6 +60,12 @@
     <ClCompile Include="GridMovement.cpp">
       <Filter>Components\Player</Filter>
     </ClCompile>
+    <ClCompile Include="LevelGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefabs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="State.h">
@@ -88,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="GridMovement.h">
       <Filter>Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefabs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelGenerator.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

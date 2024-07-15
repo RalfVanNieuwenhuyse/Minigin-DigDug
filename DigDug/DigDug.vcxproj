@@ -22,11 +22,13 @@
     <ClCompile Include="DebugCommands.cpp" />
     <ClCompile Include="GridComponent.cpp" />
     <ClCompile Include="GridMovement.cpp" />
+    <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="LivesComponent.cpp" />
     <ClCompile Include="LivesUI.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="PlayerScore.cpp" />
+    <ClCompile Include="Prefabs.cpp" />
     <ClCompile Include="ScoreUI.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>
@@ -34,10 +36,12 @@
     <ClInclude Include="DebugCommands.h" />
     <ClInclude Include="GridComponent.h" />
     <ClInclude Include="GridMovement.h" />
+    <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="LivesComponent.h" />
     <ClInclude Include="LivesUI.h" />
     <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="PlayerScore.h" />
+    <ClInclude Include="Prefabs.h" />
     <ClInclude Include="ScoreUI.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>
