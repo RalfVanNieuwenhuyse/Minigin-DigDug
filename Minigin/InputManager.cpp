@@ -56,15 +56,15 @@ void dae::InputManager::HandleConrollerInputs()
 		switch (buttonState)
 		{
 		case ButtonState::Up:
-			if (m_Controllers[index]->IsUp(button))
+			if (m_Controllers[index]->IsUp(button) && command->Active)
 				command->Execute();
 			break;
 		case ButtonState::Down:
-			if (m_Controllers[index]->IsDown(button))
+			if (m_Controllers[index]->IsDown(button) && command->Active)
 				command->Execute();
 			break;
 		case ButtonState::Pressed:
-			if (m_Controllers[index]->IsPressed(button))
+			if (m_Controllers[index]->IsPressed(button) && command->Active)
 				command->Execute();
 			break;
 		}
@@ -82,15 +82,15 @@ void dae::InputManager::HandleKeyboardInputs()
 		switch (buttonState)
 		{
 		case ButtonState::Up:
-			if (m_PreviousState[scancode] && !m_CurrentState[scancode])
+			if ((m_PreviousState[scancode] && !m_CurrentState[scancode]) && command->Active)
 				command->Execute();
 			break;
 		case ButtonState::Down:
-			if (!m_PreviousState[scancode] && m_CurrentState[scancode])
+			if ((!m_PreviousState[scancode] && m_CurrentState[scancode]) && command->Active)
 				command->Execute();
 			break;
 		case ButtonState::Pressed:
-			if (m_PreviousState[scancode] && m_CurrentState[scancode])
+			if ((m_PreviousState[scancode] && m_CurrentState[scancode]) && command->Active)
 				command->Execute();
 			break;
 		}		

@@ -7,6 +7,7 @@ namespace dae
 	public:
 		virtual ~Command() = default;
 		virtual void Execute() = 0;
+		bool Active = true;
 	};
 
 	class GameObjectCommand : public Command

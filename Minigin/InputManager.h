@@ -78,6 +78,10 @@ namespace dae
 		template<typename T> T* AddXboxCommand(std::unique_ptr<T> command, XboxControllerInput input);
 		template<typename T> T* AddKeyboardCommand(std::unique_ptr<T> command, KeyboardInput input);
 
+		template<typename T> bool RemoveXboxCommand(T* command);
+		template<typename T> bool RemoveKeyboardCommand(T* command);
+
+
 		bool ProcessInput();
 	private:
 		void HandleConrollerInputs();
@@ -113,5 +117,37 @@ namespace dae
 		T* out = command.get();
 		m_KeyboardCommands[input] = std::move(command);
 		return out;
+	}
+
+	template<typename T>
+	inline bool InputManager::RemoveXboxCommand(T* command)
+	{
+		static_assert(std::is_base_of<Command, T>::value && "T must inherit from Command");
+
+		auto it = std::find_if(m_ControllerCommands.begin(), m_ControllerCommands.end(),
+			[&command](const auto& pair) { return pair.second.get() == command; });
+
+		if (it != m_ControllerCommands.end())
+		{
+			m_ControllerCommands.erase(it);
+			return true;
+		}
+		return false;
+	}
+
+	template<typename T>
+	inline bool InputManager::RemoveKeyboardCommand(T* command)
+	{
+		static_assert(std::is_base_of<Command, T>::value && "T must inherit from Command");
+
+		auto it = std::find_if(m_KeyboardCommands.begin(), m_KeyboardCommands.end(),
+			[&command](const auto& pair) { return pair.second.get() == command; });
+
+		if (it != m_KeyboardCommands.end())
+		{
+			m_KeyboardCommands.erase(it);
+			return true;
+		}
+		return false;
 	}
 }
