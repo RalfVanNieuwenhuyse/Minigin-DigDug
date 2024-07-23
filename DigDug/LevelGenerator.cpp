@@ -83,14 +83,15 @@ void rvn::LevelGenerator::generateElement(int element, dae::Scene& scene, const 
     switch (element) {
     case 1:
         //Createplayer;
-        glm::vec3 newPos = pos;
-        newPos.z += 1.f;
-        rvn::Prefab::createCharacters(scene, newPos, grid);
-        m_Grid->DigCell(cellIndex);
+        glm::vec3 newPosPlayer = pos;
+        newPosPlayer.z += 1.f;
+        rvn::Prefab::createCharacters(scene, newPosPlayer, m_Grid.get(), grid);
+        m_Grid->DigCell(cellIndex,scene);
         break;
     case 2:
         //CreateEmpty;
-        m_Grid->DigCell(cellIndex);
+        m_Grid->DigCell(cellIndex,scene);
+        
         break;
     case 3:
         //CreateWalltype0
@@ -114,7 +115,7 @@ void rvn::LevelGenerator::generateElement(int element, dae::Scene& scene, const 
        
         break;
     default:
-        m_Grid->DigCell(cellIndex);
+        m_Grid->DigCell(cellIndex,scene);
         break;
     }
 }

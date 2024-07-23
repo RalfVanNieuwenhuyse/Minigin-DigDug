@@ -20,7 +20,3 @@ void rvn::MoveCommand::SetDirection(glm::vec3 direction)
 	 m_Direction = direction;	 
 }
 
-void rvn::MoveCommand::SetMoveSpeed(float moveSpeed)
-{
-	m_MoveSpeed = moveSpeed;
-}

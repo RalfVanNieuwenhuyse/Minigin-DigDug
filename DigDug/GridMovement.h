@@ -1,9 +1,11 @@
 #pragma once
 #include "Component.h"
+#include "GridComponent.h"
 #include <glm/glm.hpp>
 
 namespace rvn
 {
+	
 	class GridMovement final : public dae::Component
 	{
 	public:
@@ -23,6 +25,8 @@ namespace rvn
 
 		void SetGrid(std::vector<glm::vec3> grid);
 
+		void SetGridComp(GridComponent* gridComp) { m_GridComp = gridComp; };
+		GridComponent* GetGridComp() const { return m_GridComp; };
 
 	private:
 		float m_Speed{};
@@ -34,6 +38,8 @@ namespace rvn
 
 		std::vector<glm::vec3> m_Grid{};
 		glm::vec3 GetClosestGridPoint(const glm::vec3& position);
+
+		GridComponent* m_GridComp{nullptr};
 
 		bool IsWithinGridBounds(const glm::vec3& position);
 	};

@@ -20,17 +20,18 @@
 #include "GridMovement.h"
 #include "Collision.h"
 
+#include "DigDug.h"
+
 namespace rvn
 {
     namespace Prefab
     {
-        dae::GameObject* Player01(dae::Scene& scene, const glm::vec3& pos, std::vector<glm::vec3> grid)
+        dae::GameObject* Player01(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp, std::vector<glm::vec3> grid)
         {
-            auto& input = dae::InputManager::GetInstance();
 
             const float moveSpeed{ 100 };
-            const glm::vec3 moveDirectionHor{ 1, 0, 0 };
-            const glm::vec3 moveDirectionVert{ 0, 1, 0 };
+           /* const glm::vec3 moveDirectionHor{ 1, 0, 0 };
+            const glm::vec3 moveDirectionVert{ 0, 1, 0 };*/
 
             auto player = std::make_shared<dae::GameObject>();
             scene.Add(player);
@@ -44,8 +45,16 @@ namespace rvn
             auto gridmove = player->AddComponent<rvn::GridMovement>();
             gridmove->SetSpeed(moveSpeed);
             gridmove->SetGrid(grid);
+            gridmove->SetGridComp(gridcomp);
 
-            input.AddKeyboardCommand<dae::RemoveLifeCommand>(std::make_unique<dae::RemoveLifeCommand>(player.get()),
+            player->AddComponent<rvn::DigDug>();
+
+            auto& input = dae::InputManager::GetInstance();
+
+            input.AddKeyboardCommand<dae::AddScoreCommand>(std::make_unique<dae::AddScoreCommand>(player.get()),
+                dae::KeyboardInput{ SDL_SCANCODE_O, dae::ButtonState::Up });
+
+            /*input.AddKeyboardCommand<dae::RemoveLifeCommand>(std::make_unique<dae::RemoveLifeCommand>(player.get()),
                 dae::KeyboardInput{ SDL_SCANCODE_O, dae::ButtonState::Up });
 
             auto pMoveCommand = input.AddKeyboardCommand<rvn::MoveCommand>(std::make_unique<rvn::MoveCommand>(player.get()),
@@ -66,7 +75,7 @@ namespace rvn
             pMoveCommand = input.AddKeyboardCommand<rvn::MoveCommand>(std::make_unique<rvn::MoveCommand>(player.get()),
                 dae::KeyboardInput{ SDL_SCANCODE_S, dae::ButtonState::Pressed });
             pMoveCommand->SetDirection(moveDirectionVert);
-            pMoveCommand->SetMoveSpeed(moveSpeed);
+            pMoveCommand->SetMoveSpeed(moveSpeed);*/
 
             auto collisionpacman = player->AddComponent<dae::Collision>();
             collisionpacman->SetScene(scene.GetName());
@@ -80,7 +89,7 @@ namespace rvn
             return player.get();
         }
 
-        void createCharacters(dae::Scene& scene, const glm::vec3& pos, std::vector<glm::vec3> grid)
+        void createCharacters(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp ,std::vector<glm::vec3> grid)
         {
             //auto& input = dae::InputManager::GetInstance();
 
@@ -89,7 +98,7 @@ namespace rvn
             const glm::vec3 moveDirectionVert{ 0, 1, 0 };
 
 #pragma region player
-            auto player = Player01(scene, pos, grid);
+            auto player = Player01(scene, pos, gridcomp,grid);
 
             auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
@@ -148,6 +157,15 @@ namespace rvn
             auto player = std::make_shared<dae::GameObject>();
             scene.Add(player);
             player->AddComponent<dae::Image>()->SetTexture("World/WorldTile3.png");
+            player->AddComponent<dae::ImageRender>();
+            player->GetTransform()->SetPosition(pos);
+        }
+
+        void createDugSpace(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto player = std::make_shared<dae::GameObject>();
+            scene.Add(player);
+            player->AddComponent<dae::Image>()->SetTexture("World/DiggedArea.png");
             player->AddComponent<dae::ImageRender>();
             player->GetTransform()->SetPosition(pos);
         }

@@ -1,4 +1,6 @@
 #include "GridComponent.h"
+#include "Prefabs.h"
+
 
 rvn::GridComponent::GridComponent(dae::GameObject* owner)
 	:Component(owner)
@@ -28,9 +30,16 @@ const std::vector<glm::vec3>& rvn::GridComponent::CreateGrid(int rows, int collu
     return m_Grid;
 }
 
-void rvn::GridComponent::DigCell(int cellNumber)
+void rvn::GridComponent::DigCell(int cellNumber, dae::Scene& scene)
 {
+    if (m_HasBeenDug[cellNumber]) return;
     m_HasBeenDug[cellNumber] = true;
+       
+    glm::vec3 newPosDug = m_Grid[cellNumber];
+    newPosDug.x += -1.f;
+    newPosDug.y += -1.f;
+    newPosDug.z += .5f;
+    rvn::Prefab::createDugSpace(scene, newPosDug);
 }
 
 int rvn::GridComponent::GetCellIndexAtPosition(glm::vec3 position) const
@@ -51,9 +60,10 @@ bool rvn::GridComponent::IsCellDug(glm::vec3 position)
     return IsCellDug(GetCellIndexAtPosition(position));
 }
 
-void rvn::GridComponent::DigCell(glm::vec3 position)
+void rvn::GridComponent::DigCell(glm::vec3 position, dae::Scene& scene)
 {
-    DigCell(GetCellIndexAtPosition(position));
+    if (IsCellDug(position)) return;
+    DigCell(GetCellIndexAtPosition(position),scene);
 }
 
 

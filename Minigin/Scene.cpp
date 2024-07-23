@@ -17,6 +17,7 @@ Scene::~Scene() = default;
 
 void Scene::Add(std::shared_ptr<GameObject> object)
 {
+	//https://stackoverflow.com/questions/59458264/exception-thrown-read-access-violation-it-was-0xffffffffffffffff
 	m_pendingObjects.emplace_back(std::move(object));
 	m_WasGameObjectAdded = true;
 }

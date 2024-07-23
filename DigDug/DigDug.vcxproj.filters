@@ -28,12 +28,15 @@
     <Filter Include="Components\World">
       <UniqueIdentifier>{fc90f108-1b71-46cc-934b-430ad01d48bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="State">
+      <UniqueIdentifier>{1e143df6-47d0-48e6-b305-b967d3c2560a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\Player">
+      <UniqueIdentifier>{914a9d6a-ffdf-430a-9960-b2f8ee1d4ed5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DebugCommands.cpp">
@@ -66,11 +69,17 @@
     <ClCompile Include="Prefabs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DigDug.cpp">
+      <Filter>Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStates.cpp">
+      <Filter>State\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="State.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DebugCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
@@ -100,6 +109,15 @@
     </ClInclude>
     <ClInclude Include="LevelGenerator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DigDug.h">
+      <Filter>Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStates.h">
+      <Filter>State\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
