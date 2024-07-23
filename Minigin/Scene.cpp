@@ -17,7 +17,7 @@ Scene::~Scene() = default;
 
 void Scene::Add(std::shared_ptr<GameObject> object)
 {
-	m_objects.emplace_back(std::move(object));
+	m_pendingObjects.emplace_back(std::move(object));
 	m_WasGameObjectAdded = true;
 }
 
@@ -48,6 +48,13 @@ void Scene::Update()
 			return object->IsDestroyed();
 		}
 	), m_objects.end());
+
+	if (!m_pendingObjects.empty())
+	{
+		m_objects.insert(m_objects.end(), std::make_move_iterator(m_pendingObjects.begin()), std::make_move_iterator(m_pendingObjects.end()));
+		m_pendingObjects.clear();
+		m_WasGameObjectAdded = true;
+	}
 }
 
 void dae::Scene::ReorderGameobjects()

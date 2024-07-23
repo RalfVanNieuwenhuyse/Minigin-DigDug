@@ -37,6 +37,7 @@ namespace dae
 
 		std::string m_Name;
 		std::vector < std::shared_ptr<GameObject>> m_objects{};
+		std::vector < std::shared_ptr<GameObject>> m_pendingObjects{};
 		bool m_WasGameObjectAdded{ false };
 
 		static unsigned int m_idCounter; 
