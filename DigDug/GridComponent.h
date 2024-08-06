@@ -25,6 +25,7 @@ namespace rvn
 		int GetCellIndexAtPosition(glm::vec3 position) const;
 		bool IsCellDug(glm::vec3 position);
 		void DigCell(glm::vec3 position, dae::Scene& scene);
+		bool IsWithinGridBounds(const glm::vec3& position);
 
 	private:
 		std::vector<glm::vec3> m_Grid{};

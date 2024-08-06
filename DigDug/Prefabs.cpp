@@ -21,18 +21,18 @@
 #include "Collision.h"
 
 #include "DigDug.h"
+#include "PookaComp.h"
 
 namespace rvn
 {
     namespace Prefab
     {
+#pragma region player
         dae::GameObject* Player01(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp, std::vector<glm::vec3> grid)
         {
 
-            const float moveSpeed{ 100 };
-           /* const glm::vec3 moveDirectionHor{ 1, 0, 0 };
-            const glm::vec3 moveDirectionVert{ 0, 1, 0 };*/
-
+            const float moveSpeed{ 80 };
+         
             auto player = std::make_shared<dae::GameObject>();
             scene.Add(player);
             player->AddComponent<dae::Image>()->SetTexture("Characters/DigDug01.png");
@@ -54,29 +54,6 @@ namespace rvn
             input.AddKeyboardCommand<dae::AddScoreCommand>(std::make_unique<dae::AddScoreCommand>(player.get()),
                 dae::KeyboardInput{ SDL_SCANCODE_O, dae::ButtonState::Up });
 
-            /*input.AddKeyboardCommand<dae::RemoveLifeCommand>(std::make_unique<dae::RemoveLifeCommand>(player.get()),
-                dae::KeyboardInput{ SDL_SCANCODE_O, dae::ButtonState::Up });
-
-            auto pMoveCommand = input.AddKeyboardCommand<rvn::MoveCommand>(std::make_unique<rvn::MoveCommand>(player.get()),
-                dae::KeyboardInput{ SDL_SCANCODE_A, dae::ButtonState::Pressed });
-            pMoveCommand->SetDirection(-moveDirectionHor);
-            pMoveCommand->SetMoveSpeed(moveSpeed);
-
-            pMoveCommand = input.AddKeyboardCommand<rvn::MoveCommand>(std::make_unique<rvn::MoveCommand>(player.get()),
-                dae::KeyboardInput{ SDL_SCANCODE_D, dae::ButtonState::Pressed });
-            pMoveCommand->SetDirection(moveDirectionHor);
-            pMoveCommand->SetMoveSpeed(moveSpeed);
-
-            pMoveCommand = input.AddKeyboardCommand<rvn::MoveCommand>(std::make_unique<rvn::MoveCommand>(player.get()),
-                dae::KeyboardInput{ SDL_SCANCODE_W, dae::ButtonState::Pressed });
-            pMoveCommand->SetDirection(-moveDirectionVert);
-            pMoveCommand->SetMoveSpeed(moveSpeed);
-
-            pMoveCommand = input.AddKeyboardCommand<rvn::MoveCommand>(std::make_unique<rvn::MoveCommand>(player.get()),
-                dae::KeyboardInput{ SDL_SCANCODE_S, dae::ButtonState::Pressed });
-            pMoveCommand->SetDirection(moveDirectionVert);
-            pMoveCommand->SetMoveSpeed(moveSpeed);*/
-
             auto collisionpacman = player->AddComponent<dae::Collision>();
             collisionpacman->SetScene(scene.GetName());
             collisionpacman->SetBounds(14, 14);
@@ -91,13 +68,9 @@ namespace rvn
 
         void createCharacters(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp ,std::vector<glm::vec3> grid)
         {
-            //auto& input = dae::InputManager::GetInstance();
-
-            //const float moveSpeed{ 100 };
             const glm::vec3 moveDirectionHor{ 1, 0, 0 };
             const glm::vec3 moveDirectionVert{ 0, 1, 0 };
 
-#pragma region player
             auto player = Player01(scene, pos, gridcomp,grid);
 
             auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
@@ -122,53 +95,125 @@ namespace rvn
             pacmanScore->AddComponent<dae::ScoreUI>()->SetObjectToCheck(player);
             pacmanScore->SetParent(empty.get(), false);
             pacmanScore->GetTransform()->SetPosition(0.f, 25.f, 1.f);
-#pragma endregion
         }
+#pragma endregion
+
+#pragma region Terrain
 
         void createWall00(dae::Scene& scene, const glm::vec3& pos)
         {
-            auto player = std::make_shared<dae::GameObject>();
-            scene.Add(player);
-            player->AddComponent<dae::Image>()->SetTexture("World/WorldTile0.png");
-            player->AddComponent<dae::ImageRender>();
-            player->GetTransform()->SetPosition(pos);
+            auto wall = std::make_shared<dae::GameObject>();
+            scene.Add(wall);
+            wall->AddComponent<dae::Image>()->SetTexture("World/WorldTile0.png");
+            wall->AddComponent<dae::ImageRender>();
+            wall->GetTransform()->SetPosition(pos);
         }
 
         void createWall01(dae::Scene& scene, const glm::vec3& pos)
         {
-            auto player = std::make_shared<dae::GameObject>();
-            scene.Add(player);
-            player->AddComponent<dae::Image>()->SetTexture("World/WorldTile1.png");
-            player->AddComponent<dae::ImageRender>();
-            player->GetTransform()->SetPosition(pos);
+            auto wall = std::make_shared<dae::GameObject>();
+            scene.Add(wall);
+            wall->AddComponent<dae::Image>()->SetTexture("World/WorldTile1.png");
+            wall->AddComponent<dae::ImageRender>();
+            wall->GetTransform()->SetPosition(pos);
         }
 
         void createWall02(dae::Scene& scene, const glm::vec3& pos)
         {
-            auto player = std::make_shared<dae::GameObject>();
-            scene.Add(player);
-            player->AddComponent<dae::Image>()->SetTexture("World/WorldTile2.png");
-            player->AddComponent<dae::ImageRender>();
-            player->GetTransform()->SetPosition(pos);
+            auto wall = std::make_shared<dae::GameObject>();
+            scene.Add(wall);
+            wall->AddComponent<dae::Image>()->SetTexture("World/WorldTile2.png");
+            wall->AddComponent<dae::ImageRender>();
+            wall->GetTransform()->SetPosition(pos);
         }
 
         void createWall03(dae::Scene& scene, const glm::vec3& pos)
         {
-            auto player = std::make_shared<dae::GameObject>();
-            scene.Add(player);
-            player->AddComponent<dae::Image>()->SetTexture("World/WorldTile3.png");
-            player->AddComponent<dae::ImageRender>();
-            player->GetTransform()->SetPosition(pos);
+            auto wall = std::make_shared<dae::GameObject>();
+            scene.Add(wall);
+            wall->AddComponent<dae::Image>()->SetTexture("World/WorldTile3.png");
+            wall->AddComponent<dae::ImageRender>();
+            wall->GetTransform()->SetPosition(pos);
         }
 
         void createDugSpace(dae::Scene& scene, const glm::vec3& pos)
         {
-            auto player = std::make_shared<dae::GameObject>();
-            scene.Add(player);
-            player->AddComponent<dae::Image>()->SetTexture("World/DiggedArea.png");
-            player->AddComponent<dae::ImageRender>();
-            player->GetTransform()->SetPosition(pos);
+            auto wall = std::make_shared<dae::GameObject>();
+            scene.Add(wall);
+            wall->AddComponent<dae::Image>()->SetTexture("World/DiggedArea.png");
+            wall->AddComponent<dae::ImageRender>();
+            wall->GetTransform()->SetPosition(pos);
         }
+#pragma endregion
+
+#pragma region Enemy
+        void CreatePooka(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp)
+        {
+            const float moveSpeed{ 100 };
+
+            auto enemy = std::make_shared<dae::GameObject>();
+            scene.Add(enemy);
+            enemy->GetTransform()->SetPosition(pos);
+
+            enemy->AddComponent<dae::Image>()->SetTexture("Enemy/pooka.png");
+            enemy->AddComponent<dae::ImageRender>();
+            //enemy->AddComponent<dae::LivesComponent>()->SetLives(0);
+            auto gridmove = enemy->AddComponent<rvn::GridMovement>();
+            gridmove->SetSpeed(moveSpeed);
+            gridmove->SetGrid(gridcomp->GetGrid());
+            gridmove->SetGridComp(gridcomp);
+
+            auto collision = enemy->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(14, 14);
+            collision->SetLayer("Enemy");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Player") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PlayerCollidedEnemy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            enemy->AddComponent<rvn::PookaComp>();
+        }
+
+        void CreateFygar(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp)
+        {
+            const float moveSpeed{ 100 };
+
+            auto enemy = std::make_shared<dae::GameObject>();
+            scene.Add(enemy);
+            enemy->GetTransform()->SetPosition(pos);
+
+            enemy->AddComponent<dae::Image>()->SetTexture("Enemy/Fygar.png");
+            enemy->AddComponent<dae::ImageRender>();
+
+            enemy->AddComponent<dae::LivesComponent>()->SetLives(0);
+
+            auto gridmove = enemy->AddComponent<rvn::GridMovement>();
+            gridmove->SetSpeed(moveSpeed);
+            gridmove->SetGrid(gridcomp->GetGrid());
+            gridmove->SetGridComp(gridcomp);
+
+            auto collision = enemy->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(14, 14);
+            collision->SetLayer("Enemy");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Player") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PlayerCollidedEnemy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+        }
+#pragma endregion
+
 
     }//prefab    
 }//rvn

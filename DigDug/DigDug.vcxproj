@@ -30,6 +30,8 @@
     <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="PlayerScore.cpp" />
     <ClCompile Include="PlayerStates.cpp" />
+    <ClCompile Include="PookaComp.cpp" />
+    <ClCompile Include="PookaStates.cpp" />
     <ClCompile Include="Prefabs.cpp" />
     <ClCompile Include="ScoreUI.cpp" />
     <ClCompile Include="State.cpp" />
@@ -45,6 +47,8 @@
     <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="PlayerStates.h" />
+    <ClInclude Include="PookaComp.h" />
+    <ClInclude Include="PookaStates.h" />
     <ClInclude Include="Prefabs.h" />
     <ClInclude Include="ScoreUI.h" />
     <ClInclude Include="State.h" />

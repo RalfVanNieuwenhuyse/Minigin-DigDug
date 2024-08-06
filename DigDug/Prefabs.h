@@ -15,5 +15,7 @@ namespace rvn
         void createWall02(dae::Scene& scene, const glm::vec3& pos);
         void createWall03(dae::Scene& scene, const glm::vec3& pos);
         void createDugSpace(dae::Scene& scene, const glm::vec3& pos);
+        void CreatePooka(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp);
+        void CreateFygar(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp);
     }
 }
