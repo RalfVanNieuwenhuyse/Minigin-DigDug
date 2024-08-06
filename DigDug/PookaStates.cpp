@@ -66,7 +66,7 @@ void rvn::PookaAttackState::Update()
             std::vector<int> potentialDirections;
 
             // Add all directions except the opposite one
-            for (int i = 0; i < m_Directions.size(); ++i)
+            for (int i = 0; i < static_cast<int>(m_Directions.size()); ++i)
             {
                 if (i != oppositeDirectionIndex)
                 {
