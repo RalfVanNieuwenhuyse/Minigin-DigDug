@@ -2,6 +2,8 @@
 #include "Component.h"
 #include "PlayerStates.h"
 #include "Event.h"
+#include <glm/glm.hpp>
+
 
 namespace rvn
 {
@@ -19,13 +21,14 @@ namespace rvn
 		void SetState(PlayerState state);
 		dae::GameObject* GetGameObjectOwner() const;
 
-		void ChangeState(const dae::Event* e);
+		
 
 	private:
 
 		std::unique_ptr<PlayerStates> m_currentState;
-
-
+		glm::vec3 m_FirstPos{};
+		bool m_IsFirtsFrame{true};
+		void ResetLevel(const dae::Event* e);
 	};
 }
 

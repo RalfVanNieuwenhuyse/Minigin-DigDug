@@ -4,8 +4,10 @@
 #include "GridComponent.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "EventManager.h"
 
 #include <iostream>
+
 
 std::mt19937 rvn::PookaAttackState::s_Gen(std::random_device{}());
 std::uniform_int_distribution<> rvn::PookaAttackState::s_Distrib(0, 3);
@@ -30,84 +32,84 @@ void rvn::PookaAttackState::OnEnter()
 	m_MovementComp->SetSpeed(m_Speed);
 	m_MovementComp->ChangeDirection(m_Directions[m_DirectionIndex]);
 	m_GridComp = m_MovementComp->GetGridComp();
+
+    auto boundKillDigDug = std::bind(&PookaAttackState::KillDigDug, this, std::placeholders::_1);
+    dae::GameObjectEvent eventDigDugKill;
+    eventDigDugKill.eventType = "PlayerCollidedEnemy";
+    dae::EventManager::GetInstance().AddObserver(eventDigDugKill, boundKillDigDug);
 }
 
 void rvn::PookaAttackState::OnExit()
 {
+    auto boundKillDigDug = std::bind(&PookaAttackState::KillDigDug, this, std::placeholders::_1);
+    dae::GameObjectEvent eventDigDugKill;
+    eventDigDugKill.eventType = "PlayerCollidedEnemy";
+    dae::EventManager::GetInstance().RemoveObserver(eventDigDugKill, boundKillDigDug);
 }
 
 void rvn::PookaAttackState::Update()
-{
-    // Toggle the boolean flag to alternate between checking and not checking
-    m_ShouldCheckDirection = true;
-    if (m_ShouldCheckDirection)
+{       
+    bool directionHasChanged = false;
+    bool validDirection = false;
+
+    auto tempPos = m_Owner->GetTransform()->GetPosition();
+    tempPos.x += 8;
+    tempPos.y += 8;
+
+    auto checkPos = tempPos + (m_Directions[m_DirectionIndex] * 10.f);
+
+    validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
+
+    std::uniform_real_distribution<> chanceDist(0.0, 1.0);
+    double changeChance = chanceDist(s_Gen);
+
+    if (!validDirection || changeChance < 0.025)
     {
-        bool directionHasChanged = false;
-        bool validDirection = false;
+        // Get the opposite direction index
+        int oppositeDirectionIndex = (m_DirectionIndex + 2) % 4;
+        std::vector<int> potentialDirections;
 
-        auto tempPos = m_Owner->GetTransform()->GetPosition();
-        tempPos.x += 8;
-        tempPos.y += 8;
-
-        // Calculate the position based on the current direction
-        auto checkPos = tempPos + (m_Directions[m_DirectionIndex] * 10.f);
-
-        // Check if the current direction is valid
-        validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
-
-        // Random chance to change direction, even if valid
-        std::uniform_real_distribution<> chanceDist(0.0, 1.0);
-        double changeChance = chanceDist(s_Gen);
-
-        if (!validDirection || changeChance < 0.025)
+        for (int i = 0; i < static_cast<int>(m_Directions.size()); ++i)
         {
-            // Get the opposite direction index
-            int oppositeDirectionIndex = (m_DirectionIndex + 2) % 4;
-            std::vector<int> potentialDirections;
-
-            // Add all directions except the opposite one
-            for (int i = 0; i < static_cast<int>(m_Directions.size()); ++i)
+            if (i != oppositeDirectionIndex)
             {
-                if (i != oppositeDirectionIndex)
-                {
-                    potentialDirections.push_back(i);
-                }
-            }
-
-            // Generate a random index for potential directions
-            if (!potentialDirections.empty())
-            {
-                std::uniform_int_distribution<> dist(0, static_cast<int>(potentialDirections.size()) - 1);
-                int randomIndex = dist(s_Gen);
-                int dirIndex = potentialDirections[randomIndex];
-
-                checkPos = tempPos + (m_Directions[dirIndex] * 10.f);
-                validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
-
-                if (validDirection)
-                {
-                    m_DirectionIndex = dirIndex;
-                    directionHasChanged = true;
-                }
+                potentialDirections.push_back(i);
             }
         }
 
-        if (directionHasChanged)
+        if (!potentialDirections.empty())
         {
-            m_MovementComp->ChangeDirection(m_Directions[m_DirectionIndex]);
+            std::uniform_int_distribution<> dist(0, static_cast<int>(potentialDirections.size()) - 1);
+            int randomIndex = dist(s_Gen);
+            int dirIndex = potentialDirections[randomIndex];
+
+            checkPos = tempPos + (m_Directions[dirIndex] * 10.f);
+            validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
+
+            if (validDirection)
+            {
+                m_DirectionIndex = dirIndex;
+                directionHasChanged = true;
+            }
         }
-
-        // Toggle the boolean flag
-        m_ShouldCheckDirection = false;
     }
-    else
+
+    if (directionHasChanged)
     {
-        // Toggle the boolean flag
-        m_ShouldCheckDirection = true;
-    }
+        m_MovementComp->ChangeDirection(m_Directions[m_DirectionIndex]);
+    }   
 
-    // Move the entity regardless of whether the direction has changed or not
     m_MovementComp->Move();
+}
+void rvn::PookaAttackState::KillDigDug(const dae::Event* e)
+{
+    if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))
+    {
+        std::unique_ptr<dae::GameObjectEvent> eventDamageDigDug = std::make_unique<dae::GameObjectEvent>();
+        eventDamageDigDug->eventType = "DamageDigDug";
+        eventDamageDigDug->gameObject = GameEvent->gameObject;
+        dae::EventManager::GetInstance().SendEventMessage(std::move(eventDamageDigDug));
+    }
 }
 #pragma endregion
 

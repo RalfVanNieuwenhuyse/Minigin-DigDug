@@ -2,6 +2,7 @@
 #include "State.h"
 #include <glm/glm.hpp>
 #include <random>
+#include "Event.h"
 
 namespace dae
 {
@@ -54,7 +55,8 @@ namespace rvn
         static std::mt19937 s_Gen;
         static std::uniform_int_distribution<> s_Distrib;
 
-        bool m_ShouldCheckDirection = true;
+        void KillDigDug(const dae::Event* e);
+
     };
 
     class PookaGhostState final : public PookaStates

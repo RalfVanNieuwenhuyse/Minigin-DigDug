@@ -24,5 +24,9 @@ namespace rvn
 	private:
 
 		std::unique_ptr<PookaStates> m_currentState;
+
+		glm::vec3 m_FirstPos{};
+		bool m_IsFirtsFrame{ true };
+		void ResetLevel(const dae::Event* e);
 	};
 }

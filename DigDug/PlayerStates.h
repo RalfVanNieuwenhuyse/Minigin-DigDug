@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 #include <glm/glm.hpp>
+#include "Event.h"
 
 namespace rvn
 {
@@ -9,7 +10,8 @@ namespace rvn
     {
         Move,
         Pump,
-        Die
+        Die,
+        LoseLife
     };
 
 	class PlayerStates : public State
@@ -39,6 +41,8 @@ namespace rvn
         MoveCommand* m_RightCommand{ nullptr };
         MoveCommand* m_LeftCommand{ nullptr };
 
+        void DamageDigDug(const dae::Event* e);
+
     };
 
     class PumpState final : public PlayerStates
@@ -49,6 +53,7 @@ namespace rvn
         virtual void OnExit() override;
         virtual void Update() override;
     private:
+        void DamageDigDug(const dae::Event* e);
     };
 
     class DieState final : public PlayerStates
@@ -59,6 +64,18 @@ namespace rvn
         virtual void OnExit() override;
         virtual void Update() override;
     private:
+    };
+
+    class LifeLostState final : public PlayerStates
+    {
+    public:
+        LifeLostState(dae::Component* owner);
+        virtual void OnEnter() override;
+        virtual void OnExit() override;
+        virtual void Update() override;
+    private:
+        const float m_MaxTime{2.f};
+        float m_Timer{ 0 };
     };
 }
 
