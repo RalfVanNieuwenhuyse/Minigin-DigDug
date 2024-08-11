@@ -90,6 +90,15 @@
     <ClCompile Include="PookaComp.cpp">
       <Filter>Components\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="FygarComp.cpp">
+      <Filter>Components\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="FygarState.cpp">
+      <Filter>State\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="DistructionComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugCommands.h">
@@ -136,6 +145,15 @@
     </ClInclude>
     <ClInclude Include="PookaComp.h">
       <Filter>Components\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="FygarComp.h">
+      <Filter>Components\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="FygarState.h">
+      <Filter>State\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="DistructionComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

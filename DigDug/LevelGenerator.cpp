@@ -112,14 +112,17 @@ void rvn::LevelGenerator::generateElement(int element, dae::Scene& scene, const 
 
     case 7:
         //create pooka
-        glm::vec3 newPosEnemy = pos;
-        newPosEnemy.z += 1.f;
-        rvn::Prefab::CreatePooka(scene, newPosEnemy, m_Grid.get());
+        glm::vec3 newPosEnemyP = pos;
+        newPosEnemyP.z += 1.f;
+        rvn::Prefab::CreatePooka(scene, newPosEnemyP, m_Grid.get());
         m_Grid->DigCell(cellIndex, scene);
         break;
     case 8:
-        //create fygar
-        //rvn::Prefab::CreateFygar(scene, pos, m_Grid.get());
+        //create fygar 
+        glm::vec3 newPosEnemyF = pos;
+        newPosEnemyF.z += 1.f;
+        rvn::Prefab::CreateFygar(scene, newPosEnemyF, m_Grid.get());
+        m_Grid->DigCell(cellIndex, scene);
         break;
     default:
         m_Grid->DigCell(cellIndex,scene);

@@ -22,6 +22,9 @@
 
 #include "DigDug.h"
 #include "PookaComp.h"
+#include "FygarComp.h"
+
+#include "DistructionComponent.h"
 
 namespace rvn
 {
@@ -191,7 +194,7 @@ namespace rvn
             enemy->AddComponent<dae::Image>()->SetTexture("Enemy/Fygar.png");
             enemy->AddComponent<dae::ImageRender>();
 
-            enemy->AddComponent<dae::LivesComponent>()->SetLives(0);
+            //enemy->AddComponent<dae::LivesComponent>()->SetLives(0);
 
             auto gridmove = enemy->AddComponent<rvn::GridMovement>();
             gridmove->SetSpeed(moveSpeed);
@@ -211,6 +214,128 @@ namespace rvn
                     event->gameObject = other->GetParentGameObject();
                     dae::EventManager::GetInstance().SendEventMessage(std::move(event));
                 });
+
+            enemy->AddComponent<rvn::FygarComp>();
+        }
+
+        void rvn::Prefab::CreateFireBreathRight(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto fire = std::make_shared<dae::GameObject>();
+            scene.Add(fire);
+
+            glm::vec3 newPos = pos;
+            newPos.x += 16.f;
+            fire->GetTransform()->SetPosition(newPos);
+
+            fire->AddComponent<dae::Image>()->SetTexture("Enemy/FireBreathRight.png");
+            fire->AddComponent<dae::ImageRender>();
+
+            auto collision = fire->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(46, 14);
+            collision->SetLayer("Enemy");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Player") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PlayerCollidedEnemy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            fire->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
+
+        }
+
+        void rvn::Prefab::CreateFireBreathLeft(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto fire = std::make_shared<dae::GameObject>();
+            scene.Add(fire);
+
+            glm::vec3 newPos = pos;
+            newPos.x -= 48.f;
+            fire->GetTransform()->SetPosition(newPos);
+
+            fire->AddComponent<dae::Image>()->SetTexture("Enemy/FireBreathLeft.png");
+            fire->AddComponent<dae::ImageRender>();
+
+            auto collision = fire->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(46, 14);
+            collision->SetLayer("Enemy");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Player") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PlayerCollidedEnemy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            fire->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
+
+        }
+
+        void rvn::Prefab::CreateFireBreathUp(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto fire = std::make_shared<dae::GameObject>();
+            scene.Add(fire);
+
+            glm::vec3 newPos = pos;
+            newPos.y -= 48.f;
+            fire->GetTransform()->SetPosition(newPos);
+
+            fire->AddComponent<dae::Image>()->SetTexture("Enemy/FireBreathUp.png");
+            fire->AddComponent<dae::ImageRender>();
+
+            auto collision = fire->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(46, 14);
+            collision->SetLayer("Enemy");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Player") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PlayerCollidedEnemy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            fire->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
+
+        }
+
+        void rvn::Prefab::CreateFireBreathDown(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto fire = std::make_shared<dae::GameObject>();
+            scene.Add(fire);
+
+            glm::vec3 newPos = pos;
+            newPos.y += 16.f;
+            fire->GetTransform()->SetPosition(newPos);
+
+            fire->AddComponent<dae::Image>()->SetTexture("Enemy/FireBreathDown.png");
+            fire->AddComponent<dae::ImageRender>();
+
+            auto collision = fire->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(46, 14);
+            collision->SetLayer("Enemy");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Player") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PlayerCollidedEnemy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            fire->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
+
         }
 #pragma endregion
 

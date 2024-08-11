@@ -85,6 +85,7 @@ void rvn::MoveState::Update()
     tempPos.y += 8;
     player->GetComponent<rvn::GridMovement>()->GetGridComp()->DigCell(tempPos, dae::SceneManager::GetInstance().GetActiveScene());
 }
+
 void rvn::MoveState::DamageDigDug(const dae::Event* e)
 {
     if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))
@@ -114,7 +115,6 @@ void rvn::PumpState::OnEnter()
     dae::EventManager::GetInstance().AddObserver(eventDigDugKill, boundKillDigDug);
 }
 
-
 void rvn::PumpState::OnExit()
 {
     auto boundKillDigDug = std::bind(&PumpState::DamageDigDug, this, std::placeholders::_1);
@@ -126,6 +126,7 @@ void rvn::PumpState::OnExit()
 void rvn::PumpState::Update()
 {
 }
+
 void rvn::PumpState::DamageDigDug(const dae::Event* e)
 {
     if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))

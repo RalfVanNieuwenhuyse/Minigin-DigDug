@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="DebugCommands.cpp" />
     <ClCompile Include="DigDug.cpp" />
+    <ClCompile Include="DistructionComponent.cpp" />
+    <ClCompile Include="FygarComp.cpp" />
+    <ClCompile Include="FygarState.cpp" />
     <ClCompile Include="GridComponent.cpp" />
     <ClCompile Include="GridMovement.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
@@ -39,6 +42,9 @@
   <ItemGroup>
     <ClInclude Include="DebugCommands.h" />
     <ClInclude Include="DigDug.h" />
+    <ClInclude Include="DistructionComponent.h" />
+    <ClInclude Include="FygarComp.h" />
+    <ClInclude Include="FygarState.h" />
     <ClInclude Include="GridComponent.h" />
     <ClInclude Include="GridMovement.h" />
     <ClInclude Include="LevelGenerator.h" />
