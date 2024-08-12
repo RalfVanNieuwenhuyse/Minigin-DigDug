@@ -12,6 +12,10 @@
 #include "Image.h"
 #include "ServiceLocator.h"
 
+#include "Prefabs.h"
+#include "SceneManager.h"
+#include "Scene.h"
+
 rvn::PlayerStates::PlayerStates(dae::Component* owner)
 	:State(owner)
 {
@@ -31,6 +35,8 @@ void rvn::MoveState::OnEnter()
     auto DigDugComp = dynamic_cast<DigDug*>(GetOwnerComponent());
     auto player = DigDugComp->GetGameObjectOwner();
     player->GetComponent<dae::Image>()->SetTexture("Characters/DigDug01.png");
+
+   
 
     auto& input = dae::InputManager::GetInstance();
 
@@ -57,6 +63,11 @@ void rvn::MoveState::OnEnter()
     dae::GameObjectEvent eventDigDugKill;
     eventDigDugKill.eventType = "DamageDigDug";
     dae::EventManager::GetInstance().AddObserver(eventDigDugKill, boundKillDigDug);
+
+    auto boundPump = std::bind(&MoveState::SetToPump, this, std::placeholders::_1);
+    dae::GameObjectEvent eventPump;
+    eventPump.eventType = "PumpCommand";
+    dae::EventManager::GetInstance().AddObserver(eventPump, boundPump);
 }
 
 void rvn::MoveState::OnExit()
@@ -71,6 +82,11 @@ void rvn::MoveState::OnExit()
     dae::GameObjectEvent eventDigDugKill;
     eventDigDugKill.eventType = "DamageDigDug";
     dae::EventManager::GetInstance().RemoveObserver(eventDigDugKill, boundKillDigDug);
+
+    auto boundPump = std::bind(&MoveState::SetToPump, this, std::placeholders::_1);
+    dae::GameObjectEvent eventPump;
+    eventPump.eventType = "PumpCommand";
+    dae::EventManager::GetInstance().RemoveObserver(eventPump, boundPump);
 }
 
 void rvn::MoveState::Update()
@@ -98,6 +114,18 @@ void rvn::MoveState::DamageDigDug(const dae::Event* e)
         }
     }
 }
+void rvn::MoveState::SetToPump(const dae::Event* e)
+{
+    if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))
+    {
+        auto DigDugComp = dynamic_cast<DigDug*>(GetOwnerComponent());
+        auto player = DigDugComp->GetGameObjectOwner();
+        if (player == GameEvent->gameObject)
+        {
+            DigDugComp->SetState(PlayerState::Pump);
+        }
+    }
+}
 #pragma endregion MoveState
 
 #pragma region PumpState
@@ -113,6 +141,32 @@ void rvn::PumpState::OnEnter()
     dae::GameObjectEvent eventDigDugKill;
     eventDigDugKill.eventType = "DamageDigDug";
     dae::EventManager::GetInstance().AddObserver(eventDigDugKill, boundKillDigDug);
+
+    auto boundPump = std::bind(&PumpState::Pump, this, std::placeholders::_1);
+    dae::GameObjectEvent eventPump;
+    eventPump.eventType = "PumpCommand";
+    dae::EventManager::GetInstance().AddObserver(eventPump, boundPump);
+
+    auto OwnerComp = static_cast<DigDug*>(GetOwnerComponent());
+    auto ownerGO = OwnerComp->GetGameObjectOwner();
+
+    if (OwnerComp->GetLastDirection() == glm::vec3{1,0,0})
+    {
+        m_Pump = Prefab::CreatePumpRight(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+    }
+    else if(OwnerComp->GetLastDirection() == glm::vec3{ -1,0,0 })
+    {
+        m_Pump = Prefab::CreatePumpLeft(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+    }
+    else if (OwnerComp->GetLastDirection() == glm::vec3{ 0,1,0 })
+    {
+        m_Pump = Prefab::CreatePumpDown(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+    }
+    else if (OwnerComp->GetLastDirection() == glm::vec3{ 0,-1,0 })
+    {
+        m_Pump = Prefab::CreatePumpUp(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+    }
+    
 }
 
 void rvn::PumpState::OnExit()
@@ -121,10 +175,25 @@ void rvn::PumpState::OnExit()
     dae::GameObjectEvent eventDigDugKill;
     eventDigDugKill.eventType = "DamageDigDug";
     dae::EventManager::GetInstance().RemoveObserver(eventDigDugKill, boundKillDigDug);
+
+    auto boundPump = std::bind(&PumpState::Pump, this, std::placeholders::_1);
+    dae::GameObjectEvent eventPump;
+    eventPump.eventType = "PumpCommand";
+    dae::EventManager::GetInstance().RemoveObserver(eventPump, boundPump);
+
+    m_Pump->Destroy();
 }
 
 void rvn::PumpState::Update()
 {
+    m_IdleTimer += dae::GTime::GetInstance().GetDeltaTime();
+    m_CDTimer += dae::GTime::GetInstance().GetDeltaTime();
+
+    if (m_IdleTimer >= m_MaxPumpIdle)
+    {
+        auto DigDugComp = dynamic_cast<DigDug*>(GetOwnerComponent());
+        DigDugComp->SetState(PlayerState::Move);
+    }
 }
 
 void rvn::PumpState::DamageDigDug(const dae::Event* e)
@@ -136,6 +205,18 @@ void rvn::PumpState::DamageDigDug(const dae::Event* e)
         if (player == GameEvent->gameObject)
         {
             DigDugComp->SetState(PlayerState::LoseLife);
+        }
+    }
+}
+void rvn::PumpState::Pump(const dae::Event* e)
+{
+    if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))
+    {
+        auto DigDugComp = dynamic_cast<DigDug*>(GetOwnerComponent());
+        auto player = DigDugComp->GetGameObjectOwner();
+        if (player == GameEvent->gameObject)
+        {
+            m_IdleTimer = 0;
         }
     }
 }

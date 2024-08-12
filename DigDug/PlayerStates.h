@@ -42,6 +42,7 @@ namespace rvn
         MoveCommand* m_LeftCommand{ nullptr };
 
         void DamageDigDug(const dae::Event* e);
+        void SetToPump(const dae::Event* e);
 
     };
 
@@ -53,7 +54,17 @@ namespace rvn
         virtual void OnExit() override;
         virtual void Update() override;
     private:
+
+        dae::GameObject* m_Pump{nullptr};
+
+        const float m_MaxPumpIdle{1.f};
+        float m_IdleTimer{};
+
+        const float m_CoolDown{ 0.5f };
+        float m_CDTimer{};
+
         void DamageDigDug(const dae::Event* e);
+        void Pump(const dae::Event* e);
     };
 
     class DieState final : public PlayerStates

@@ -21,7 +21,8 @@ namespace rvn
 		void SetState(PlayerState state);
 		dae::GameObject* GetGameObjectOwner() const;
 
-		
+		void SetLastDirection(const glm::vec3& direction) { m_LastDirection = direction; };
+		const glm::vec3& GetLastDirection() {return m_LastDirection;};
 
 	private:
 
@@ -29,6 +30,8 @@ namespace rvn
 		glm::vec3 m_FirstPos{};
 		bool m_IsFirtsFrame{true};
 		void ResetLevel(const dae::Event* e);
+
+		glm::vec3 m_LastDirection{};
 	};
 }
 

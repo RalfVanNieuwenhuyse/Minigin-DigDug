@@ -99,6 +99,9 @@
     <ClCompile Include="DistructionComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="PumpCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugCommands.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="DistructionComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PumpCommand.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -26,6 +26,8 @@
 
 #include "DistructionComponent.h"
 
+#include "PumpCommand.h"
+
 namespace rvn
 {
     namespace Prefab
@@ -54,8 +56,13 @@ namespace rvn
 
             auto& input = dae::InputManager::GetInstance();
 
-            input.AddKeyboardCommand<dae::AddScoreCommand>(std::make_unique<dae::AddScoreCommand>(player.get()),
-                dae::KeyboardInput{ SDL_SCANCODE_O, dae::ButtonState::Up });
+            /*input.AddKeyboardCommand<dae::AddScoreCommand>(std::make_unique<dae::AddScoreCommand>(player.get()),
+                dae::KeyboardInput{ SDL_SCANCODE_O, dae::ButtonState::Up });*/
+
+            input.AddKeyboardCommand<rvn::PumpCommand>(std::make_unique<rvn::PumpCommand>(player.get()),
+                dae::KeyboardInput{ SDL_SCANCODE_F, dae::ButtonState::Pressed });
+
+
 
             auto collisionpacman = player->AddComponent<dae::Collision>();
             collisionpacman->SetScene(scene.GetName());
@@ -99,6 +106,123 @@ namespace rvn
             pacmanScore->SetParent(empty.get(), false);
             pacmanScore->GetTransform()->SetPosition(0.f, 25.f, 1.f);
         }
+
+        dae::GameObject* rvn::Prefab::CreatePumpRight(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto pump = std::make_shared<dae::GameObject>();
+            scene.Add(pump);
+
+            glm::vec3 newPos = pos;
+            newPos.x += 16.f;
+            pump->GetTransform()->SetPosition(newPos);
+
+            pump->AddComponent<dae::Image>()->SetTexture("Characters/PumpRight.png");
+            pump->AddComponent<dae::ImageRender>();
+
+            auto collision = pump->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(46, 14);
+            collision->SetLayer("Pump");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Enemy") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PumpHitEnenmy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            return pump.get();
+        }
+
+        dae::GameObject* rvn::Prefab::CreatePumpLeft(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto pump = std::make_shared<dae::GameObject>();
+            scene.Add(pump);
+
+            glm::vec3 newPos = pos;
+            newPos.x -= 48.f;
+            pump->GetTransform()->SetPosition(newPos);
+
+            pump->AddComponent<dae::Image>()->SetTexture("Characters/PumpLeft.png");
+            pump->AddComponent<dae::ImageRender>();
+
+            auto collision = pump->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(46, 14);
+            collision->SetLayer("Pump");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Enemy") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PumpHitEnenmy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            return pump.get();
+        }
+
+        dae::GameObject* rvn::Prefab::CreatePumpUp(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto pump = std::make_shared<dae::GameObject>();
+            scene.Add(pump);
+
+            glm::vec3 newPos = pos;
+            newPos.y -= 48.f;
+            pump->GetTransform()->SetPosition(newPos);
+
+            pump->AddComponent<dae::Image>()->SetTexture("Characters/PumpUp.png");
+            pump->AddComponent<dae::ImageRender>();
+
+            auto collision = pump->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(14, 46);
+            collision->SetLayer("Pump");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Enemy") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PumpHitEnenmy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            return pump.get();
+        }
+
+        dae::GameObject* rvn::Prefab::CreatePumpDown(dae::Scene& scene, const glm::vec3& pos)
+        {
+            auto pump = std::make_shared<dae::GameObject>();
+            scene.Add(pump);
+
+            glm::vec3 newPos = pos;
+            newPos.y += 16.f;
+            pump->GetTransform()->SetPosition(newPos);
+
+            pump->AddComponent<dae::Image>()->SetTexture("Characters/PumpDown.png");
+            pump->AddComponent<dae::ImageRender>();
+
+            auto collision = pump->AddComponent<dae::Collision>();
+            collision->SetScene(scene.GetName());
+            collision->SetBounds(14, 46);
+            collision->SetLayer("Pump");
+            collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
+                {
+                    if (other->GetLayer() != "Enemy") return;
+
+                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    event->eventType = "PumpHitEnenmy";
+                    event->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                });
+
+            return pump.get();
+        }
+
 #pragma endregion
 
 #pragma region Terrain
@@ -172,12 +296,14 @@ namespace rvn
             collision->SetLayer("Enemy");
             collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
                 {
-                    if (other->GetLayer() != "Player") return;
+                    if (other->GetLayer() != "Player") 
+                    {
+                        std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                        event->eventType = "PlayerCollidedEnemy";
+                        event->gameObject = other->GetParentGameObject();
+                        dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                    }
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
-                    event->eventType = "PlayerCollidedEnemy";
-                    event->gameObject = other->GetParentGameObject();
-                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
                 });
 
             enemy->AddComponent<rvn::PookaComp>();
@@ -207,12 +333,14 @@ namespace rvn
             collision->SetLayer("Enemy");
             collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
                 {
-                    if (other->GetLayer() != "Player") return;
+                    if (other->GetLayer() != "Player")
+                    {
+                        std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                        event->eventType = "PlayerCollidedEnemy";
+                        event->gameObject = other->GetParentGameObject();
+                        dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                    }
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
-                    event->eventType = "PlayerCollidedEnemy";
-                    event->gameObject = other->GetParentGameObject();
-                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
                 });
 
             enemy->AddComponent<rvn::FygarComp>();
@@ -292,7 +420,7 @@ namespace rvn
 
             auto collision = fire->AddComponent<dae::Collision>();
             collision->SetScene(scene.GetName());
-            collision->SetBounds(46, 14);
+            collision->SetBounds(14, 46);
             collision->SetLayer("Enemy");
             collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
                 {
@@ -322,7 +450,7 @@ namespace rvn
 
             auto collision = fire->AddComponent<dae::Collision>();
             collision->SetScene(scene.GetName());
-            collision->SetBounds(46, 14);
+            collision->SetBounds(14, 46);
             collision->SetLayer("Enemy");
             collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
                 {
@@ -339,6 +467,8 @@ namespace rvn
         }
 #pragma endregion
 
+
+       
 
     }//prefab    
 }//rvn

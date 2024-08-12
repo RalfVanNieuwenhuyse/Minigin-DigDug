@@ -36,6 +36,7 @@
     <ClCompile Include="PookaComp.cpp" />
     <ClCompile Include="PookaStates.cpp" />
     <ClCompile Include="Prefabs.cpp" />
+    <ClCompile Include="PumpCommand.cpp" />
     <ClCompile Include="ScoreUI.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>
@@ -56,6 +57,7 @@
     <ClInclude Include="PookaComp.h" />
     <ClInclude Include="PookaStates.h" />
     <ClInclude Include="Prefabs.h" />
+    <ClInclude Include="PumpCommand.h" />
     <ClInclude Include="ScoreUI.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>

@@ -22,5 +22,10 @@ namespace rvn
         void CreateFireBreathLeft(dae::Scene& scene, const glm::vec3& pos);
         void CreateFireBreathUp(dae::Scene& scene, const glm::vec3& pos);
         void CreateFireBreathDown(dae::Scene& scene, const glm::vec3& pos);
+
+        dae::GameObject* CreatePumpRight(dae::Scene& scene, const glm::vec3& pos);
+        dae::GameObject* CreatePumpLeft(dae::Scene& scene, const glm::vec3& pos);
+        dae::GameObject* CreatePumpUp(dae::Scene& scene, const glm::vec3& pos);
+        dae::GameObject* CreatePumpDown(dae::Scene& scene, const glm::vec3& pos);
     }
 }
