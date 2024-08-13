@@ -11,7 +11,7 @@ void dae::LivesComponent::SetLives(unsigned int nrOfLives)
 {
 	m_Lives = nrOfLives;
 
-	std::unique_ptr<GameObjectEvent> event = std::make_unique<GameObjectEvent>();
+	std::shared_ptr<GameObjectEvent> event = std::make_shared<GameObjectEvent>();
 	event->eventType = "LiveUpdated";
 	event->gameObject = GetOwner();
 	EventManager::GetInstance().SendEventMessage(std::move(event));
@@ -29,7 +29,7 @@ void dae::LivesComponent::RemoveLives(const unsigned int nrOfLives)
 
 	servicelocator::get_sound_system().Play(SoundData{ 0, 1/*, dae::SoundData::SoundType::SoundEffect, "pacman_death.wav" ,true*/ });
 
-	std::unique_ptr<GameObjectEvent> event = std::make_unique<GameObjectEvent>();
+	std::shared_ptr<GameObjectEvent> event = std::make_shared<GameObjectEvent>();
 	event->eventType = "LiveUpdated";
 	event->gameObject = GetOwner();
 	EventManager::GetInstance().SendEventMessage(std::move(event));

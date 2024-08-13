@@ -8,6 +8,9 @@ namespace rvn
 {
     class GridMovement;
     class GridComponent;
+    class MoveCommandF;
+    class FireCommand;
+
 
     enum class EFygarState
     {
@@ -26,6 +29,8 @@ namespace rvn
         virtual void OnEnter() override {};
         virtual void OnExit() override {};
         virtual void Update() override {};
+        virtual void Exicute(){};
+
     protected:
         FygarState(dae::Component* owner);
 	};
@@ -37,6 +42,8 @@ namespace rvn
         virtual void OnEnter() override;
         virtual void OnExit() override;
         virtual void Update() override;
+        virtual void Exicute() override;
+
     private:
         GridMovement* m_MovementComp{ nullptr };
         GridComponent* m_GridComp{ nullptr };
@@ -51,6 +58,13 @@ namespace rvn
 
         float m_BreathCooldown{};
         float m_BreathTimer{};
+
+        MoveCommandF* m_UpCommand{ nullptr };
+        MoveCommandF* m_DownCommand{ nullptr };
+        MoveCommandF* m_RightCommand{ nullptr };
+        MoveCommandF* m_LeftCommand{ nullptr };
+
+        FireCommand* m_FireCommand{ nullptr };
 
         void KillDigDug(const dae::Event* e);
     };

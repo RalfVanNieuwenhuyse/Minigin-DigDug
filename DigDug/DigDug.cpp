@@ -1,6 +1,7 @@
 #include "DigDug.h"
 #include "Transform.h"
 #include "EventManager.h"
+#include "Prefabs.h"
 
 //#include <iostream>
 
@@ -13,6 +14,26 @@ rvn::DigDug::DigDug(dae::GameObject* owner)
 	dae::GameObjectEvent eventResetLevel;
 	eventResetLevel.eventType = "ResetLevel";
 	dae::EventManager::GetInstance().AddObserver(eventResetLevel, boundResetLevel);
+
+	auto pumpright = Prefab::CreatePumpRight(dae::SceneManager::GetInstance().GetActiveScene(),GetOwner()->GetTransform()->GetPosition());
+	auto pumpLeft = Prefab::CreatePumpLeft(dae::SceneManager::GetInstance().GetActiveScene(), GetOwner()->GetTransform()->GetPosition());
+	auto pumpUp = Prefab::CreatePumpUp(dae::SceneManager::GetInstance().GetActiveScene(), GetOwner()->GetTransform()->GetPosition());
+	auto pumpDown = Prefab::CreatePumpDown(dae::SceneManager::GetInstance().GetActiveScene(), GetOwner()->GetTransform()->GetPosition());
+
+	pumpright->SetParent(GetOwner(), true);
+	pumpLeft->SetParent(GetOwner(), true);
+	pumpUp->SetParent(GetOwner(), true);
+	pumpDown->SetParent(GetOwner(), true);
+
+	m_Pumps.push_back(pumpright);
+	m_Pumps.push_back(pumpLeft);
+	m_Pumps.push_back(pumpUp);
+	m_Pumps.push_back(pumpDown);
+
+	for (auto pump : m_Pumps)
+	{
+		pump->SetActive(false);
+	}
 }
 
 void rvn::DigDug::Update()
@@ -23,6 +44,7 @@ void rvn::DigDug::Update()
 	{
 		m_IsFirtsFrame = false;
 		m_FirstPos = GetOwner()->GetTransform()->GetPosition();
+		SetState(PlayerState::Move);
 	}
 }
 

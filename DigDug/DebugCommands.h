@@ -35,5 +35,37 @@ namespace dae
 
 		void Execute() override;		
 	};
+
+	class NextLevelCommand : public Command
+	{
+	public:
+		NextLevelCommand();
+
+		void Execute() override;
+	};
+
+	class SinglePlayerCommand : public Command
+	{
+	public:
+		SinglePlayerCommand();
+
+		void Execute() override;
+	};
+
+	class MultiPlayerCommand : public Command
+	{
+	public:
+		MultiPlayerCommand();
+
+		void Execute() override;
+	};
+
+	class VSPlayerCommand : public Command
+	{
+	public:
+		VSPlayerCommand();
+
+		void Execute() override;
+	};
 }
 

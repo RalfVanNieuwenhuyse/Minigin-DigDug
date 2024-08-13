@@ -10,7 +10,7 @@ void dae::PlayerScore::SetScore(const unsigned int score)
 {
 	m_Score = score;
 
-    std::unique_ptr<GameObjectEvent> event = std::make_unique<GameObjectEvent>();
+    std::shared_ptr<GameObjectEvent> event = std::make_shared<GameObjectEvent>();
     event->eventType = "ScoreUpdated";
     event->gameObject = GetOwner();
     EventManager::GetInstance().SendEventMessage(std::move(event));
@@ -27,7 +27,7 @@ void dae::PlayerScore::AddScore(const unsigned int score)
         m_Score += score;
     }
 
-    std::unique_ptr<GameObjectEvent> event = std::make_unique<GameObjectEvent>();
+    std::shared_ptr<GameObjectEvent> event = std::make_shared<GameObjectEvent>();
     event->eventType = "ScoreUpdated";
     event->gameObject = GetOwner();
     EventManager::GetInstance().SendEventMessage(std::move(event));

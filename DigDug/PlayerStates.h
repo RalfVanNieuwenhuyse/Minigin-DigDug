@@ -62,9 +62,12 @@ namespace rvn
 
         const float m_CoolDown{ 0.5f };
         float m_CDTimer{};
+        bool m_HitEnemy{false};
 
         void DamageDigDug(const dae::Event* e);
         void Pump(const dae::Event* e);
+
+        void EnemyHit(const dae::Event* e);
     };
 
     class DieState final : public PlayerStates

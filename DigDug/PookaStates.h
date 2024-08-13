@@ -57,6 +57,9 @@ namespace rvn
 
         void KillDigDug(const dae::Event* e);
 
+        void PumpHit(const dae::Event* e);
+        bool m_PumpHit{ false };
+
     };
 
     class PookaGhostState final : public PookaStates

@@ -21,6 +21,7 @@ void rvn::FygarComp::Update()
 	{
 		m_IsFirtsFrame = false;
 		m_FirstPos = GetOwner()->GetTransform()->GetPosition();
+		SetState(EFygarState::Attack);
 	}
 }
 
@@ -57,6 +58,11 @@ void rvn::FygarComp::SetState(EFygarState state)
 dae::GameObject* rvn::FygarComp::GetGameObjectOwner() const
 {
 	return GetOwner();
+}
+
+void rvn::FygarComp::Exicute()
+{
+	m_currentState->Exicute();
 }
 
 void rvn::FygarComp::ResetLevel(const dae::Event*)

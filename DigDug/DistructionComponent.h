@@ -15,6 +15,8 @@ namespace rvn
 		void Update() override;
 		void SetLifeTime(float lifetime) { m_MaxTimer = lifetime; };
 
+		void ResetTimer() { m_Timer = 0; };
+
 	private:
 		float m_Timer{};
 		float m_MaxTimer{};

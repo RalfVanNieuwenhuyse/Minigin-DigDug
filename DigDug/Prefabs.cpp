@@ -27,13 +27,15 @@
 #include "DistructionComponent.h"
 
 #include "PumpCommand.h"
+#include "Event.h"
+#include "EventManager.h"
 
 namespace rvn
 {
     namespace Prefab
     {
 #pragma region player
-        dae::GameObject* Player01(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp, std::vector<glm::vec3> grid)
+        dae::GameObject* Player01(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp, std::vector<glm::vec3> grid, rvn::GameTypeLevelGen)
         {
 
             const float moveSpeed{ 80 };
@@ -52,17 +54,12 @@ namespace rvn
             gridmove->SetGrid(grid);
             gridmove->SetGridComp(gridcomp);
 
-            player->AddComponent<rvn::DigDug>();
-
+            auto digdugcomp = player->AddComponent<rvn::DigDug>(); 
+            //digdugcomp->SetIsPlayer2(true);
             auto& input = dae::InputManager::GetInstance();
-
-            /*input.AddKeyboardCommand<dae::AddScoreCommand>(std::make_unique<dae::AddScoreCommand>(player.get()),
-                dae::KeyboardInput{ SDL_SCANCODE_O, dae::ButtonState::Up });*/
 
             input.AddKeyboardCommand<rvn::PumpCommand>(std::make_unique<rvn::PumpCommand>(player.get()),
                 dae::KeyboardInput{ SDL_SCANCODE_F, dae::ButtonState::Pressed });
-
-
 
             auto collisionpacman = player->AddComponent<dae::Collision>();
             collisionpacman->SetScene(scene.GetName());
@@ -76,18 +73,86 @@ namespace rvn
             return player.get();
         }
 
-        void createCharacters(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp ,std::vector<glm::vec3> grid)
+        void createCharacters(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp ,std::vector<glm::vec3> grid, rvn::GameTypeLevelGen type)
         {
             const glm::vec3 moveDirectionHor{ 1, 0, 0 };
             const glm::vec3 moveDirectionVert{ 0, 1, 0 };
 
-            auto player = Player01(scene, pos, gridcomp,grid);
+            auto player = Player01(scene, pos, gridcomp,grid, type);
 
             auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
             auto empty = std::make_shared<dae::GameObject>();
             scene.Add(empty);
             empty->GetTransform()->SetPosition(5, (480.f / 2.f), 1);
+
+            auto pacmanLives = std::make_shared<dae::GameObject>();
+            scene.Add(pacmanLives);
+            auto textcompPacLives = pacmanLives->AddComponent<dae::Text>();
+            textcompPacLives->SetFont(font);
+            pacmanLives->AddComponent<dae::TextRender>();
+            pacmanLives->AddComponent<dae::LivesUI>()->SetObjectToCheck(player);
+            pacmanLives->SetParent(empty.get(), false);
+
+            auto pacmanScore = std::make_shared<dae::GameObject>();
+            scene.Add(pacmanScore);
+            auto textcompPacScore = pacmanScore->AddComponent<dae::Text>();
+            textcompPacScore->SetFont(font);
+            pacmanScore->AddComponent<dae::TextRender>();
+            pacmanScore->AddComponent<dae::ScoreUI>()->SetObjectToCheck(player);
+            pacmanScore->SetParent(empty.get(), false);
+            pacmanScore->GetTransform()->SetPosition(0.f, 25.f, 1.f);
+        }
+
+        dae::GameObject* Player02(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp, std::vector<glm::vec3> grid, rvn::GameTypeLevelGen)
+        {
+            const float moveSpeed{ 80 };
+
+            auto player = std::make_shared<dae::GameObject>();
+            scene.Add(player);
+            player->AddComponent<dae::Image>()->SetTexture("Characters/DigDug01.png");
+            player->AddComponent<dae::ImageRender>();
+            player->GetTransform()->SetPosition(pos);
+
+            player->AddComponent<dae::LivesComponent>()->SetLives(3);
+            player->AddComponent<dae::PlayerScore>()->SetScore(0);
+
+            auto gridmove = player->AddComponent<rvn::GridMovement>();
+            gridmove->SetSpeed(moveSpeed);
+            gridmove->SetGrid(grid);
+            gridmove->SetGridComp(gridcomp);
+
+            auto digdugcomp = player->AddComponent<rvn::DigDug>();
+            digdugcomp->SetIsPlayer2(true);
+            auto& input = dae::InputManager::GetInstance();
+
+            input.AddXboxCommand<rvn::PumpCommand>(std::make_unique<rvn::PumpCommand>(player.get()),
+                dae::XboxControllerInput{ 0, dae::XboxController::ControllerButton::ButtonA, dae::ButtonState::Pressed });
+
+            auto collisionpacman = player->AddComponent<dae::Collision>();
+            collisionpacman->SetScene(scene.GetName());
+            collisionpacman->SetBounds(14, 14);
+            collisionpacman->SetLayer("Player");
+            collisionpacman->SetCallback([&](const dae::Collision*, const dae::Collision*)
+                {
+
+                });
+
+            return player.get();
+        }
+
+        void createCharacter02(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp, std::vector<glm::vec3> grid, rvn::GameTypeLevelGen type)
+        {
+            const glm::vec3 moveDirectionHor{ 1, 0, 0 };
+            const glm::vec3 moveDirectionVert{ 0, 1, 0 };
+
+            auto player = Player02(scene, pos, gridcomp, grid, type);
+
+            auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+
+            auto empty = std::make_shared<dae::GameObject>();
+            scene.Add(empty);
+            empty->GetTransform()->SetPosition(5, (480.f / 2.f)-200, 1);
 
             auto pacmanLives = std::make_shared<dae::GameObject>();
             scene.Add(pacmanLives);
@@ -127,12 +192,13 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Enemy") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
-                    event->eventType = "PumpHitEnenmy";
-                    event->gameObject = other->GetParentGameObject();
-                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                    std::shared_ptr<dae::GameObjectEvent> eventPumpHit = std::make_shared<dae::GameObjectEvent>();
+                    eventPumpHit->eventType = "PumpHitEnenmy";
+                    eventPumpHit->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(eventPumpHit));
                 });
 
+            //pump->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
             return pump.get();
         }
 
@@ -156,11 +222,12 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Enemy") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
-                    event->eventType = "PumpHitEnenmy";
-                    event->gameObject = other->GetParentGameObject();
-                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                    std::shared_ptr<dae::GameObjectEvent> eventPumpHit = std::make_shared<dae::GameObjectEvent>();
+                    eventPumpHit->eventType = "PumpHitEnenmy";
+                    eventPumpHit->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(eventPumpHit));
                 });
+           // pump->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
 
             return pump.get();
         }
@@ -185,11 +252,12 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Enemy") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
-                    event->eventType = "PumpHitEnenmy";
-                    event->gameObject = other->GetParentGameObject();
-                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                    std::shared_ptr<dae::GameObjectEvent> eventPumpHit = std::make_shared<dae::GameObjectEvent>();
+                    eventPumpHit->eventType = "PumpHitEnenmy";
+                    eventPumpHit->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(eventPumpHit));
                 });
+           // pump->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
 
             return pump.get();
         }
@@ -214,11 +282,13 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Enemy") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
-                    event->eventType = "PumpHitEnenmy";
-                    event->gameObject = other->GetParentGameObject();
-                    dae::EventManager::GetInstance().SendEventMessage(std::move(event));
+                    std::shared_ptr<dae::GameObjectEvent> eventPumpHit = std::make_shared<dae::GameObjectEvent>();
+                    eventPumpHit->eventType = "PumpHitEnenmy";
+                    eventPumpHit->gameObject = other->GetParentGameObject();
+                    dae::EventManager::GetInstance().SendEventMessage(std::move(eventPumpHit));
                 });
+            //pump->AddComponent<rvn::DistructionComponent>()->SetLifeTime(1.f);
+
 
             return pump.get();
         }
@@ -296,9 +366,9 @@ namespace rvn
             collision->SetLayer("Enemy");
             collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
                 {
-                    if (other->GetLayer() != "Player") 
+                    if (other->GetLayer() == "Player") 
                     {
-                        std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                        std::shared_ptr<dae::GameObjectEvent> event = std::make_shared<dae::GameObjectEvent>();
                         event->eventType = "PlayerCollidedEnemy";
                         event->gameObject = other->GetParentGameObject();
                         dae::EventManager::GetInstance().SendEventMessage(std::move(event));
@@ -309,7 +379,7 @@ namespace rvn
             enemy->AddComponent<rvn::PookaComp>();
         }
 
-        void CreateFygar(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp)
+        void CreateFygar(dae::Scene& scene, const glm::vec3& pos, rvn::GridComponent* gridcomp, rvn::GameTypeLevelGen type )
         {
             const float moveSpeed{ 100 };
 
@@ -333,9 +403,9 @@ namespace rvn
             collision->SetLayer("Enemy");
             collision->SetCallback([&](const dae::Collision*, const dae::Collision* other)
                 {
-                    if (other->GetLayer() != "Player")
+                    if (other->GetLayer() == "Player")
                     {
-                        std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                        std::shared_ptr<dae::GameObjectEvent> event = std::make_shared<dae::GameObjectEvent>();
                         event->eventType = "PlayerCollidedEnemy";
                         event->gameObject = other->GetParentGameObject();
                         dae::EventManager::GetInstance().SendEventMessage(std::move(event));
@@ -343,7 +413,9 @@ namespace rvn
 
                 });
 
-            enemy->AddComponent<rvn::FygarComp>();
+            auto fygarComp = enemy->AddComponent<rvn::FygarComp>();
+
+            if(type==GameTypeLevelGen::VS) fygarComp->SetIsPlayer2(true);
         }
 
         void rvn::Prefab::CreateFireBreathRight(dae::Scene& scene, const glm::vec3& pos)
@@ -366,7 +438,7 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Player") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    std::shared_ptr<dae::GameObjectEvent> event = std::make_shared<dae::GameObjectEvent>();
                     event->eventType = "PlayerCollidedEnemy";
                     event->gameObject = other->GetParentGameObject();
                     dae::EventManager::GetInstance().SendEventMessage(std::move(event));
@@ -396,7 +468,7 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Player") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    std::shared_ptr<dae::GameObjectEvent> event = std::make_shared<dae::GameObjectEvent>();
                     event->eventType = "PlayerCollidedEnemy";
                     event->gameObject = other->GetParentGameObject();
                     dae::EventManager::GetInstance().SendEventMessage(std::move(event));
@@ -426,7 +498,7 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Player") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    std::shared_ptr<dae::GameObjectEvent> event = std::make_shared<dae::GameObjectEvent>();
                     event->eventType = "PlayerCollidedEnemy";
                     event->gameObject = other->GetParentGameObject();
                     dae::EventManager::GetInstance().SendEventMessage(std::move(event));
@@ -456,7 +528,7 @@ namespace rvn
                 {
                     if (other->GetLayer() != "Player") return;
 
-                    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+                    std::shared_ptr<dae::GameObjectEvent> event = std::make_shared<dae::GameObjectEvent>();
                     event->eventType = "PlayerCollidedEnemy";
                     event->gameObject = other->GetParentGameObject();
                     dae::EventManager::GetInstance().SendEventMessage(std::move(event));

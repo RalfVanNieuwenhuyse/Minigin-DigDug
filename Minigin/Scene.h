@@ -39,6 +39,10 @@ namespace dae
 		std::vector < std::shared_ptr<GameObject>> m_objects{};
 		std::vector < std::shared_ptr<GameObject>> m_pendingObjects{};
 		bool m_WasGameObjectAdded{ false };
+		std::vector<Collision*> m_pendingCollisions;
+		bool m_WasCollisionAdded = false;
+
+		void ReorderCollisions();  // New method to reorder collisions if needed
 
 		static unsigned int m_idCounter; 
 

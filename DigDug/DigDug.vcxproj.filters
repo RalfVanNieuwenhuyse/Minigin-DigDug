@@ -102,6 +102,15 @@
     <ClCompile Include="PumpCommand.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
+    <ClCompile Include="PumpCom.cpp">
+      <Filter>Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FireCommand.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugCommands.h">
@@ -159,6 +168,15 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="PumpCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="PumpCom.h">
+      <Filter>Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FireCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>

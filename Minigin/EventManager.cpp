@@ -23,6 +23,7 @@ void dae::EventManager::HandleEvents()
 	{
 		for (const auto& observer : m_Observers[*e])
 		{
+			if(observer)
 			observer(e);
 		}
 	}

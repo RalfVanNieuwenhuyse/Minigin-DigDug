@@ -18,8 +18,8 @@
 
 #include <iostream>
 
-rvn::LevelGenerator::LevelGenerator(const std::string& filename)
-    :m_Filename(filename)
+rvn::LevelGenerator::LevelGenerator(const std::string& filename, const GameTypeLevelGen gameType)
+    :m_Filename(filename),m_GameType(gameType)
 {
 }
 
@@ -76,6 +76,8 @@ void rvn::LevelGenerator::generateLevel(dae::Scene& scene, const glm::vec3& offs
             generateElement(element, scene, position, m_Grid->GetGrid(), y * row.Size() + x);
         }
     }
+
+    m_IsLoaded = true;
 }
 
 void rvn::LevelGenerator::generateElement(int element, dae::Scene& scene, const glm::vec3& pos, std::vector<glm::vec3> grid, int cellIndex)
@@ -85,7 +87,7 @@ void rvn::LevelGenerator::generateElement(int element, dae::Scene& scene, const 
         //Createplayer;
         glm::vec3 newPosPlayer = pos;
         newPosPlayer.z += 1.f;
-        rvn::Prefab::createCharacters(scene, newPosPlayer, m_Grid.get(), grid);
+        rvn::Prefab::createCharacters(scene, newPosPlayer, m_Grid.get(), grid, m_GameType);
         m_Grid->DigCell(cellIndex,scene);
         break;
     case 2:
@@ -121,7 +123,15 @@ void rvn::LevelGenerator::generateElement(int element, dae::Scene& scene, const 
         //create fygar 
         glm::vec3 newPosEnemyF = pos;
         newPosEnemyF.z += 1.f;
-        rvn::Prefab::CreateFygar(scene, newPosEnemyF, m_Grid.get());
+        rvn::Prefab::CreateFygar(scene, newPosEnemyF, m_Grid.get(),m_GameType);
+        m_Grid->DigCell(cellIndex, scene);
+        break;
+
+    case 9:
+        //player02
+        glm::vec3 newPosPlayer02 = pos;
+        newPosPlayer02.z += 1.f;
+        rvn::Prefab::createCharacter02(scene, newPosPlayer02, m_Grid.get(), grid, m_GameType);
         m_Grid->DigCell(cellIndex, scene);
         break;
     default:

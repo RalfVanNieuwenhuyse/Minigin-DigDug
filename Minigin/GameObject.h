@@ -40,6 +40,9 @@ namespace dae
 
 		void ClearChildren();
 		std::vector<std::shared_ptr<GameObject>> GetChildren() const;
+
+		void SetActive(bool state) { m_Active = state; };
+		bool GetActive() { return m_Active; };
 		
 	private:
 
@@ -54,6 +57,7 @@ namespace dae
 		std::vector<std::shared_ptr<Component>> m_Components{};
 
 		bool m_IsDestroyed = false;
+		bool m_Active{true};
 	};
 
 	template<typename T>

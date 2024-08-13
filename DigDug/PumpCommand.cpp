@@ -9,7 +9,7 @@ rvn::PumpCommand::PumpCommand(dae::GameObject* gameObject)
 
 void rvn::PumpCommand::Execute()
 {
-    std::unique_ptr<dae::GameObjectEvent> event = std::make_unique<dae::GameObjectEvent>();
+    std::shared_ptr<dae::GameObjectEvent> event = std::make_shared<dae::GameObjectEvent>();
     event->eventType = "PumpCommand";
     event->gameObject = GetGameObject();
     dae::EventManager::GetInstance().SendEventMessage(std::move(event));

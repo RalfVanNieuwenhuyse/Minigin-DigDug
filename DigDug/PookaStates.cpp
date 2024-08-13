@@ -37,6 +37,12 @@ void rvn::PookaAttackState::OnEnter()
     dae::GameObjectEvent eventDigDugKill;
     eventDigDugKill.eventType = "PlayerCollidedEnemy";
     dae::EventManager::GetInstance().AddObserver(eventDigDugKill, boundKillDigDug);
+
+    auto boundPumpHit = std::bind(&PookaAttackState::PumpHit, this, std::placeholders::_1);
+    dae::GameObjectEvent eventPumpHit;
+    eventPumpHit.eventType = "PumpHitEnenmy";
+    dae::EventManager::GetInstance().AddObserver(eventPumpHit, boundPumpHit);
+    m_PumpHit = false;
 }
 
 void rvn::PookaAttackState::OnExit()
@@ -45,6 +51,11 @@ void rvn::PookaAttackState::OnExit()
     dae::GameObjectEvent eventDigDugKill;
     eventDigDugKill.eventType = "PlayerCollidedEnemy";
     dae::EventManager::GetInstance().RemoveObserver(eventDigDugKill, boundKillDigDug);
+
+    auto boundPumpHit = std::bind(&PookaAttackState::PumpHit, this, std::placeholders::_1);
+    dae::GameObjectEvent eventPumpHit;
+    eventPumpHit.eventType = "PumpHitEnenmy";
+    dae::EventManager::GetInstance().RemoveObserver(eventPumpHit, boundPumpHit);
 }
 
 void rvn::PookaAttackState::Update()
@@ -100,15 +111,31 @@ void rvn::PookaAttackState::Update()
     }   
 
     m_MovementComp->Move();
+
+    if (m_PumpHit)
+    {
+        auto comp = static_cast<PookaComp*>(GetOwnerComponent());
+        comp->SetState(EPookaState::Pump);
+    }
 }
 void rvn::PookaAttackState::KillDigDug(const dae::Event* e)
 {
     if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))
     {
-        std::unique_ptr<dae::GameObjectEvent> eventDamageDigDug = std::make_unique<dae::GameObjectEvent>();
+        std::shared_ptr<dae::GameObjectEvent> eventDamageDigDug = std::make_shared<dae::GameObjectEvent>();
         eventDamageDigDug->eventType = "DamageDigDug";
         eventDamageDigDug->gameObject = GameEvent->gameObject;
         dae::EventManager::GetInstance().SendEventMessage(std::move(eventDamageDigDug));
+    }
+}
+void rvn::PookaAttackState::PumpHit(const dae::Event* e)
+{
+    if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))
+    {
+        if (GameEvent->gameObject == m_Owner)
+        {
+            m_PumpHit = true;
+        }        
     }
 }
 #pragma endregion

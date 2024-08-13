@@ -24,12 +24,21 @@ namespace rvn
 		void SetLastDirection(const glm::vec3& direction) { m_LastDirection = direction; };
 		const glm::vec3& GetLastDirection() {return m_LastDirection;};
 
+		const std::vector<dae::GameObject*>& GetPumps() { return m_Pumps; };
+
+		void SetIsPlayer2(bool isPlayer2) { m_IsMultyPlaye02 = isPlayer2; };
+		bool IsPlayer2() { return m_IsMultyPlaye02; };
+
 	private:
 
 		std::unique_ptr<PlayerStates> m_currentState;
 		glm::vec3 m_FirstPos{};
 		bool m_IsFirtsFrame{true};
 		void ResetLevel(const dae::Event* e);
+
+		std::vector<dae::GameObject*> m_Pumps;
+
+		bool m_IsMultyPlaye02{false};
 
 		glm::vec3 m_LastDirection{};
 	};

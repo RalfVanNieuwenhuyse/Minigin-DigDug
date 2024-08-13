@@ -11,6 +11,9 @@
 #include "ServiceLocator.h"
 
 #include "GTime.h"
+#include "MoveCommand.h"
+#include "InputManager.h"
+#include "FireCommand.h"
 
 std::mt19937 rvn::FygarAttackState::s_Gen(std::random_device{}());
 std::uniform_int_distribution<> rvn::FygarAttackState::s_Distrib(0, 3);
@@ -46,6 +49,32 @@ void rvn::FygarAttackState::OnEnter()
     m_BreathTimer = 0.f;
     std::uniform_real_distribution<> cooldownDis(3.0f, 6.0f);
     m_BreathCooldown = static_cast<float>(cooldownDis(s_Gen));
+
+    if (OwnerComp->IsPlayer2())
+    {
+        auto& input = dae::InputManager::GetInstance();
+
+        const glm::vec3 moveDirectionHor{ 1, 0, 0 };
+        const glm::vec3 moveDirectionVert{ 0, 1, 0 };
+        m_LeftCommand = input.AddXboxCommand<rvn::MoveCommandF>(std::make_unique<rvn::MoveCommandF>(m_Owner),
+            dae::XboxControllerInput{ 0, dae::XboxController::ControllerButton::DPadLeft, dae::ButtonState::Pressed });
+        m_LeftCommand->SetDirection(-moveDirectionHor);
+
+        m_RightCommand = input.AddXboxCommand<rvn::MoveCommandF>(std::make_unique<rvn::MoveCommandF>(m_Owner),
+            dae::XboxControllerInput{ 0, dae::XboxController::ControllerButton::DPadRight, dae::ButtonState::Pressed });
+        m_RightCommand->SetDirection(moveDirectionHor);
+
+        m_UpCommand = input.AddXboxCommand<rvn::MoveCommandF>(std::make_unique<rvn::MoveCommandF>(m_Owner),
+            dae::XboxControllerInput{ 0, dae::XboxController::ControllerButton::DPadUp, dae::ButtonState::Pressed });
+        m_UpCommand->SetDirection(-moveDirectionVert);
+
+        m_DownCommand = input.AddXboxCommand<rvn::MoveCommandF>(std::make_unique<rvn::MoveCommandF>(m_Owner),
+            dae::XboxControllerInput{ 0, dae::XboxController::ControllerButton::DPadDown, dae::ButtonState::Pressed });
+        m_DownCommand->SetDirection(moveDirectionVert);
+
+        m_FireCommand = input.AddXboxCommand<rvn::FireCommand>(std::make_unique<rvn::FireCommand>(m_Owner),
+            dae::XboxControllerInput{ 0, dae::XboxController::ControllerButton::ButtonA, dae::ButtonState::Pressed });
+    }
 }
 
 void rvn::FygarAttackState::OnExit()
@@ -54,80 +83,105 @@ void rvn::FygarAttackState::OnExit()
 	dae::GameObjectEvent eventDigDugKill;
 	eventDigDugKill.eventType = "PlayerCollidedEnemy";
 	dae::EventManager::GetInstance().RemoveObserver(eventDigDugKill, boundKillDigDug);
+
+    auto& input = dae::InputManager::GetInstance();
+    auto OwnerComp = static_cast<FygarComp*>(GetOwnerComponent());
+    if (OwnerComp->IsPlayer2())
+    {
+        input.RemoveXboxCommand(m_UpCommand);
+        input.RemoveXboxCommand(m_DownCommand);
+        input.RemoveXboxCommand(m_LeftCommand);
+        input.RemoveXboxCommand(m_RightCommand);
+        input.RemoveXboxCommand(m_FireCommand);
+    }
 }
 
 void rvn::FygarAttackState::Update()
 {
-    bool directionHasChanged = false;
-    bool validDirection = false;
-
-    auto tempPos = m_Owner->GetTransform()->GetPosition();
-    tempPos.x += 8;
-    tempPos.y += 8;
-
-    auto checkPos = tempPos + (m_Directions[m_DirectionIndex] * 10.f);
-
-    validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
-
-    std::uniform_real_distribution<> chanceDist(0.0, 1.0);
-    double changeChance = chanceDist(s_Gen);
-
-    if (!validDirection || changeChance < 0.025)
+    auto OwnerComp = static_cast<FygarComp*>(GetOwnerComponent());
+    if (!OwnerComp->IsPlayer2())
     {
-        // Get the opposite direction index
-        int oppositeDirectionIndex = (m_DirectionIndex + 2) % 4;
-        std::vector<int> potentialDirections;
+        bool directionHasChanged = false;
+        bool validDirection = false;
 
-        for (int i = 0; i < static_cast<int>(m_Directions.size()); ++i)
+        auto tempPos = m_Owner->GetTransform()->GetPosition();
+        tempPos.x += 8;
+        tempPos.y += 8;
+
+        auto checkPos = tempPos + (m_Directions[m_DirectionIndex] * 10.f);
+
+        validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
+
+        std::uniform_real_distribution<> chanceDist(0.0, 1.0);
+        double changeChance = chanceDist(s_Gen);
+
+        if (!validDirection || changeChance < 0.025)
         {
-            if (i != oppositeDirectionIndex)
+            // Get the opposite direction index
+            int oppositeDirectionIndex = (m_DirectionIndex + 2) % 4;
+            std::vector<int> potentialDirections;
+
+            for (int i = 0; i < static_cast<int>(m_Directions.size()); ++i)
             {
-                potentialDirections.push_back(i);
+                if (i != oppositeDirectionIndex)
+                {
+                    potentialDirections.push_back(i);
+                }
+            }
+
+            if (!potentialDirections.empty())
+            {
+                std::uniform_int_distribution<> dist(0, static_cast<int>(potentialDirections.size()) - 1);
+                int randomIndex = dist(s_Gen);
+                int dirIndex = potentialDirections[randomIndex];
+
+                checkPos = tempPos + (m_Directions[dirIndex] * 10.f);
+                validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
+
+                if (validDirection)
+                {
+                    m_DirectionIndex = dirIndex;
+                    directionHasChanged = true;
+                }
             }
         }
 
-        if (!potentialDirections.empty())
+        if (directionHasChanged)
         {
-            std::uniform_int_distribution<> dist(0, static_cast<int>(potentialDirections.size()) - 1);
-            int randomIndex = dist(s_Gen);
-            int dirIndex = potentialDirections[randomIndex];
+            m_MovementComp->ChangeDirection(m_Directions[m_DirectionIndex]);
+        }
 
-            checkPos = tempPos + (m_Directions[dirIndex] * 10.f);
-            validDirection = m_GridComp->IsCellDug(checkPos) && m_GridComp->IsWithinGridBounds(checkPos);
+        m_MovementComp->Move();
 
-            if (validDirection)
-            {
-                m_DirectionIndex = dirIndex;
-                directionHasChanged = true;
-            }
+        m_BreathTimer += dae::GTime::GetInstance().GetDeltaTime();
+
+        if (m_BreathTimer >= m_BreathCooldown)
+        {
+            m_BreathTimer = 0.f;
+            std::uniform_real_distribution<> cooldownDis(3.0f, 6.0f);
+            m_BreathCooldown = static_cast<float>(cooldownDis(s_Gen));
+
+            //auto OwnerComp = static_cast<FygarComp*>(GetOwnerComponent());
+            OwnerComp->SetState(EFygarState::Fire);
         }
     }
-
-    if (directionHasChanged)
+    else
     {
-        m_MovementComp->ChangeDirection(m_Directions[m_DirectionIndex]);
+
     }
+}
 
-    m_MovementComp->Move();
-
-    m_BreathTimer += dae::GTime::GetInstance().GetDeltaTime();
-
-    if (m_BreathTimer >= m_BreathCooldown)
-    {
-        m_BreathTimer = 0.f;
-        std::uniform_real_distribution<> cooldownDis(3.0f, 6.0f);
-        m_BreathCooldown = static_cast<float>(cooldownDis(s_Gen));
-
-        auto OwnerComp = static_cast<FygarComp*>(GetOwnerComponent());
-        OwnerComp->SetState(EFygarState::Fire);
-    }
+void rvn::FygarAttackState::Exicute()
+{
+    auto OwnerComp = static_cast<FygarComp*>(GetOwnerComponent());
+    OwnerComp->SetState(EFygarState::Fire);
 }
 
 void rvn::FygarAttackState::KillDigDug(const dae::Event* e)
 {
     if (const dae::GameObjectEvent* GameEvent = static_cast<const dae::GameObjectEvent*>(e))
     {
-        std::unique_ptr<dae::GameObjectEvent> eventDamageDigDug = std::make_unique<dae::GameObjectEvent>();
+        std::shared_ptr<dae::GameObjectEvent> eventDamageDigDug = std::make_shared<dae::GameObjectEvent>();
         eventDamageDigDug->eventType = "DamageDigDug";
         eventDamageDigDug->gameObject = GameEvent->gameObject;
         dae::EventManager::GetInstance().SendEventMessage(std::move(eventDamageDigDug));
@@ -145,30 +199,54 @@ void rvn::FygarFireState::OnEnter()
 {
     auto OwnerComp = static_cast<FygarComp*>(GetOwnerComponent());
     auto ownerGO = OwnerComp->GetGameObjectOwner();
-
-    std::uniform_real_distribution<> directionDis(0, 3);
-    int randomDirection = static_cast<int>(directionDis(s_GenFygarFire));
-
-   
-
     dae::servicelocator::get_sound_system().Play(dae::SoundData{ 2, 1 });
 
-    switch (randomDirection)
+    if (!OwnerComp->IsPlayer2())
     {
-    case 0:
-        Prefab::CreateFireBreathRight(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
-        break;
-    case 1:
-        Prefab::CreateFireBreathLeft(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
-        break;
-    case 2:
-        Prefab::CreateFireBreathUp(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
-        break;
-    case 3:
-        Prefab::CreateFireBreathDown(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
-        break;
-    default:
-        break;
+        std::uniform_real_distribution<> directionDis(0, 3);
+        int randomDirection = static_cast<int>(directionDis(s_GenFygarFire));
+        switch (randomDirection)
+        {
+        case 0:
+            Prefab::CreateFireBreathRight(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+            break;
+        case 1:
+            Prefab::CreateFireBreathLeft(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+            break;
+        case 2:
+            Prefab::CreateFireBreathUp(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+            break;
+        case 3:
+            Prefab::CreateFireBreathDown(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+            break;
+        default:
+            break;
+        }
+    }
+    
+    if (OwnerComp->IsPlayer2())
+    {
+        if (OwnerComp->GetLastDirection() == glm::vec3{ 1,0,0 })
+        {
+            Prefab::CreateFireBreathRight(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+        }
+        else if (OwnerComp->GetLastDirection() == glm::vec3{ -1,0,0 })
+        {
+            Prefab::CreateFireBreathLeft(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+        }
+        else if (OwnerComp->GetLastDirection() == glm::vec3{ 0,1,0 })
+        {
+            Prefab::CreateFireBreathDown(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+
+        }
+        else if (OwnerComp->GetLastDirection() == glm::vec3{ 0,-1,0 })
+        {
+            Prefab::CreateFireBreathUp(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+        }
+        else
+        {
+            Prefab::CreateFireBreathRight(dae::SceneManager::GetInstance().GetActiveScene(), ownerGO->GetTransform()->GetPosition());
+        }
     }
 }
 
